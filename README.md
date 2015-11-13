@@ -1,6 +1,6 @@
 # updWallp
 
-![Logo](https://raw.githubusercontent.com/yafp/updWallp/master/img/appIcon.png)
+![Logo](https://raw.githubusercontent.com/yafp/updWallp/master/img/appIcon_128px.png)
 
 
 ## About updWallp
@@ -10,6 +10,10 @@ generates a dimmed & blured version of it and set that as new wallpaper on your 
 The basic idea is inspired by Muzei
 
 - https://github.com/romannurik/muzei/
+
+and
+
+- https://github.com/aepirli/linmuzei
 
 
 
