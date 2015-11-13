@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #  Name:       updWallp
-#  Version:    0.1
+#  Version:    0.2
 #  Function:   Script to pick a random image from a folder, generate a dimmed & blured version of it and set it as wallpaper
 #  Usage:      ./updWallp.sh /path/to/yourImageSourceFolder
 #  Github:     https://github.com/yafp/updWallp
@@ -19,7 +19,7 @@
 imageSourcePath=$1                                    #"/home/fpoeck/Dropbox/Photos/WallpaperTest/"
 backupFilename="currentBaseWallpaper.png"             # path for copy of selected file
 outputFilename="currentGeneratedWallpaper.png"        # filename for generated file
-updWallpDir=""                                        #
+updWallpDir=$(pwd)                                    #
 blurCommand="-channel RGBA  -blur 0x8"                # imageMagick blur command example:    -channel RGBA  -blur 0x8
 dimCommand="-brightness-contrast -30x10"              # imageMagick dim command example:     -brightness-contrast -30x10
                                                       #   where -30 is to darken by 30 and +10 is to increase the contrast by 10.
@@ -33,8 +33,9 @@ normal=$(tput sgr0)                                   # cli output in normal
 # CHECKREQUIREMENTS
 # ---------------------------------------------------------------------
 function checkRequirements() {
-   echo "...Checking requirements"
+   printf "...Checking requirements:"
    command -v convert >/dev/null 2>&1 || { echo >&2 "Imagemagick is required but not installed.  Aborting."; exit 1; }
+   printf "\t\t\t\t\t\t${bold}OK${normal}\n"
 }
 
 
@@ -45,10 +46,10 @@ function checkRequirements() {
 function checkImageSourceFolder() {
    if [ -d "$imageSourcePath" ];                                        # if image source folder exists
       then
-      echo "...Source folder '$imageSourcePath' exists"                 # can continue
+      printf "...Source folder: $imageSourcePath \t\t${bold}OK${normal}\n"                 # can continue
    else
-      echo "${bold}ERROR:${normal} source folder doesnt exist.die"
-      echo "${bold}...aborting now${normal}"
+      printf "${bold}ERROR:${normal} source folder doesnt exist.\n"
+      printf "${bold}...aborting now${normal}"
       exit                                                              # otherwise die
    fi
 }
@@ -61,8 +62,7 @@ function checkImageSourceFolder() {
 function displayNotification() {
    if [ -f $notifyPath ];    # if notify-send exists
    then
-      notify-send "$1" "$2"
-      #notify-send "Generated new wallpaper" -i "~/Desktop/logo.png"
+      notify-send "$1" "$2" -i "$updWallpDir/img/appIcon.png"
    else
       printf "${bold}WARNING:${normal} notify-send not found\n"
    fi
@@ -85,10 +85,39 @@ generateNewWallpaper(){
 # SETLINUXWALLPAPER
 # ---------------------------------------------------------------------
 function setLinuxWallpaper() {
-   printf "...Trying to set new wallpaper\n"
-   printf "...This is a dummy\n"
-   displayNotification "updWallp" "Set new wallpaper"
-   printf "\n${bold}Finished${normal}\n"
+   printf "...Trying to activate the new wallpaper\n"
+
+   if [ "$(pidof gnome-settings-daemon)" ]
+     then
+       printf "...Setting wallpaper using gsettings\t\t\t\t\t${bold}OK${normal}\n"
+       gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$outputFilename
+     else
+       if [ -f ~/.xinitrc ]
+       then
+         if [ "$(which feh)" ]
+         then
+           printf "Gnome-settings-daemons not running, setting wallpaper with feh..."
+           feh $outputFilename
+           feh_xinitSet
+         elif [ "$(which hsetroot)" ]
+         then
+           printf "Gnome-settings-daemons not running, setting wallpaper with hsetroot..."
+           hsetroot -cover $outputFilename
+           hsetroot_xinitSet
+         elif [ "$(which nitrogen)" ]
+         then
+           printf "Gnome-settings-daemons not running, setting wallpaper with nitrogen..."
+           nitrogen $outputFilename
+           nitrogen_xinitSet
+         else
+           printf "You need to have either feh, hsetroot or nitrogen, bruhbruh."
+           exit
+         fi
+       else
+         printf "You should have a ~/.xinitrc file."
+         exit
+       fi
+     fi
 }
 
 
@@ -97,8 +126,11 @@ function setLinuxWallpaper() {
 # SCRIPT-LOGIC
 # #####################################################################
 clear
+displayNotification "updWallp" "Started processing"
 printf "${bold}*** updWallp ***${normal}\n\n"
+printf "...Operating system: $OSTYPE\t\t\t\t\t\t${bold}OK${normal}\n"
 checkRequirements          # function to check the requirements
+printf "...WorkingDir: $updWallpDir\n"
 checkImageSourceFolder     # check if user-supplied source folder exists
 generateNewWallpaper       # generates a new wallpaper
 setLinuxWallpaper          # set the linux wallpaper
