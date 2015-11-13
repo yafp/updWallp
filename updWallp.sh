@@ -3,7 +3,7 @@
 #  Name:       updWallp
 #  Version:    0.1
 #  Function:   Script to pick a random image from a folder, generate a dimmed & blured version of it and set it as wallpaper
-#  Usage:      ./updWallp /path/to/yourImageSourceFolder
+#  Usage:      ./updWallp.sh /path/to/yourImageSourceFolder
 #  Github:     https://github.com/yafp/updWallp
 #
 #
@@ -17,11 +17,15 @@
 # CONFIGURATION
 # ---------------------------------------------------------------------
 imageSourcePath=$1                                    #"/home/fpoeck/Dropbox/Photos/WallpaperTest/"
-baseFile="currentBaseWallpaper.png"                   # path for copy of selected file
-generatedFile="currentGeneratedWallpaper.png"         # filename for generated file
+backupFilename="currentBaseWallpaper.png"             # path for copy of selected file
+outputFilename="currentGeneratedWallpaper.png"        # filename for generated file
+updWallpDir=""                                        #
+blurCommand="-channel RGBA  -blur 0x8"                # imageMagick blur command example:    -channel RGBA  -blur 0x8
+dimCommand="-brightness-contrast -30x10"              # imageMagick dim command example:     -brightness-contrast -30x10
+                                                      #   where -30 is to darken by 30 and +10 is to increase the contrast by 10.
 notifyPath="/usr/bin/notify-send"
-bold=$(tput bold)
-normal=$(tput sgr0)
+bold=$(tput bold)                                     # cli output in bold
+normal=$(tput sgr0)                                   # cli output in normal
 
 
 
@@ -39,14 +43,13 @@ function checkRequirements() {
 # CHECKIMAGESOURCEFOLDER
 # ---------------------------------------------------------------------
 function checkImageSourceFolder() {
-   echo "...Checking image source folder: $imageSourcePath"
-
-   if [ -d $imageSourcePath ];                     # if image source folder exists
-   then
-      echo "...Source folder exists"               # can continue
+   if [ -d "$imageSourcePath" ];                                        # if image source folder exists
+      then
+      echo "...Source folder '$imageSourcePath' exists"                 # can continue
    else
-      echo "ERROR: source folder doesnt exist"
-      exit                                         # otherwise die
+      echo "${bold}ERROR:${normal} source folder doesnt exist.die"
+      echo "${bold}...aborting now${normal}"
+      exit                                                              # otherwise die
    fi
 }
 
@@ -56,14 +59,12 @@ function checkImageSourceFolder() {
 # NOTIFICATION
 # ---------------------------------------------------------------------
 function displayNotification() {
-   echo "$2"
-
    if [ -f $notifyPath ];    # if notify-send exists
    then
       notify-send "$1" "$2"
       #notify-send "Generated new wallpaper" -i "~/Desktop/logo.png"
    else
-      echo "${bold}WARNING:${normal} notify-send not found"
+      printf "${bold}WARNING:${normal} notify-send not found\n"
    fi
 }
 
@@ -73,15 +74,9 @@ function displayNotification() {
 # GENERATE CURRENT IMAGES IN WORKING DIR
 # ---------------------------------------------------------------------
 generateNewWallpaper(){
-   randomImage=$(find $imageSourcePath -type f | shuf -n 1)       # pick random image from source folder
-   convert "$randomImage"  $baseFile                              # copy random base image to project folder
-
-   # Create a dimmed & blur-verion of the image into the working dir
-   #
-   # dim - where -30 is to darken by 30 and +10 is to increase the contrast by 10.
-   convert "$randomImage" -channel RGBA  -blur 0x8 -brightness-contrast -30x10  $generatedFile
-
-   # displayNotification "updWallp" "Finished wallpaper generation"
+   randomImage=$(find $imageSourcePath -type f | shuf -n 1)             # pick random image from source folder
+   convert "$randomImage" $backupFilename                              # copy random base image to project folder
+   convert "$randomImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
 }
 
 
@@ -90,9 +85,10 @@ generateNewWallpaper(){
 # SETLINUXWALLPAPER
 # ---------------------------------------------------------------------
 function setLinuxWallpaper() {
-   echo "...Trying to set new wallpaper"
-   echo "...This is a dummy"
+   printf "...Trying to set new wallpaper\n"
+   printf "...This is a dummy\n"
    displayNotification "updWallp" "Set new wallpaper"
+   printf "\n${bold}Finished${normal}\n"
 }
 
 
@@ -101,7 +97,7 @@ function setLinuxWallpaper() {
 # SCRIPT-LOGIC
 # #####################################################################
 clear
-echo "${bold}*** updWallp ***${normal}"
+printf "${bold}*** updWallp ***${normal}\n\n"
 checkRequirements          # function to check the requirements
 checkImageSourceFolder     # check if user-supplied source folder exists
 generateNewWallpaper       # generates a new wallpaper
