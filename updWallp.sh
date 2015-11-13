@@ -16,11 +16,13 @@
 # ---------------------------------------------------------------------
 # CONFIGURATION
 # ---------------------------------------------------------------------
-imageSourcePath=$1                                    #"/home/fpoeck/Dropbox/Photos/WallpaperTest/"
-backupFilename="currentBaseWallpaper.png"             # path for copy of selected file
+updWallpDir=""                                          # Define where the updWallp folder is located- Must be configured
+
+imageSourcePath=$1                                    # example: "/home/foo/Pictures"
+backupFilename="currentBaseWallpaper.png"             # filename for backup copy of selected file
 outputFilename="currentGeneratedWallpaper.png"        # filename for generated file
-updWallpDir=$(pwd)                                    #
-blurCommand="-channel RGBA  -blur 0x8"                # imageMagick blur command example:    -channel RGBA  -blur 0x8
+
+blurCommand="-channel RGBA  -blur 0x9"                # imageMagick blur command example:    -channel RGBA  -blur 0x8
 dimCommand="-brightness-contrast -30x10"              # imageMagick dim command example:     -brightness-contrast -30x10
                                                       #   where -30 is to darken by 30 and +10 is to increase the contrast by 10.
 notifyPath="/usr/bin/notify-send"
@@ -30,13 +32,31 @@ normal=$(tput sgr0)                                   # cli output in normal
 
 
 # ---------------------------------------------------------------------
-# CHECKREQUIREMENTS
+# CHECKIMAGEMAGICK
 # ---------------------------------------------------------------------
-function checkRequirements() {
-   printf "...Checking requirements:"
+function checkImageMagick() {
+   printf "...Checking for ImageMagick:"
    command -v convert >/dev/null 2>&1 || { echo >&2 "Imagemagick is required but not installed.  Aborting."; exit 1; }
-   printf "\t\t\t\t\t\t${bold}OK${normal}\n"
+   printf "\t\t\t\t\t\t\t\t\t${bold}OK${normal}\n"
 }
+
+
+# ---------------------------------------------------------------------
+# CHECKUPDWALLP
+# ---------------------------------------------------------------------
+function checkupdWallpFolder() {
+   printf "...Checking updWallp working dir\n"
+   if [ -d "$updWallpDir" ];                                                    # if script folder is defined
+      then
+      printf "...updWallp folder:\t\t$updWallpDir \t\t${bold}OK${normal}\n"      # can continue
+   else
+      displayNotification "updWallp" "updWallp folder not configured"
+      printf "${bold}ERROR:${normal} updWallp folder not configured\n"
+      printf "${bold}...aborting now${normal}"
+      exit                                                              # otherwise die
+   fi
+}
+
 
 
 
@@ -46,8 +66,9 @@ function checkRequirements() {
 function checkImageSourceFolder() {
    if [ -d "$imageSourcePath" ];                                        # if image source folder exists
       then
-      printf "...Source folder: $imageSourcePath \t\t${bold}OK${normal}\n"                 # can continue
+      printf "...Source folder:\t\t$imageSourcePath \t${bold}OK${normal}\n"                 # can continue
    else
+      displayNotification "updWallp" "Source folder missing"
       printf "${bold}ERROR:${normal} source folder doesnt exist.\n"
       printf "${bold}...aborting now${normal}"
       exit                                                              # otherwise die
@@ -62,7 +83,7 @@ function checkImageSourceFolder() {
 function displayNotification() {
    if [ -f $notifyPath ];    # if notify-send exists
    then
-      notify-send "$1" "$2" -i "$updWallpDir/img/appIcon.png"
+      notify-send "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
    else
       printf "${bold}WARNING:${normal} notify-send not found\n"
    fi
@@ -89,8 +110,9 @@ function setLinuxWallpaper() {
 
    if [ "$(pidof gnome-settings-daemon)" ]
      then
-       printf "...Setting wallpaper using gsettings\t\t\t\t\t${bold}OK${normal}\n"
+       printf "...Setting wallpaper using gsettings\t\t\t\t\t\t\t\t${bold}OK${normal}\n"
        gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$outputFilename
+       displayNotification "updWallp" "Enjoy your new wallpaper"
      else
        if [ -f ~/.xinitrc ]
        then
@@ -126,11 +148,12 @@ function setLinuxWallpaper() {
 # SCRIPT-LOGIC
 # #####################################################################
 clear
-displayNotification "updWallp" "Started processing"
 printf "${bold}*** updWallp ***${normal}\n\n"
-printf "...Operating system: $OSTYPE\t\t\t\t\t\t${bold}OK${normal}\n"
-checkRequirements          # function to check the requirements
-printf "...WorkingDir: $updWallpDir\n"
+printf "...Operating system:\t\t $OSTYPE\t\t\t\t\t\t\t${bold}OK${normal}\n"
+
+checkImageMagick           # function to check if ImageMagick is installed
+checkupdWallpFolder        # function to check if user configured the script folder
 checkImageSourceFolder     # check if user-supplied source folder exists
+
 generateNewWallpaper       # generates a new wallpaper
 setLinuxWallpaper          # set the linux wallpaper
