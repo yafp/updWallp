@@ -1,5 +1,8 @@
 # updWallp
 
+![Logo](https://raw.githubusercontent.com/yafp/updWallp/master/img/appIcon.png)
+
+
 ## About updWallp
 updWallp is a small bash script which picks a random image from a user-defined local folder,
 generates a dimmed & blured version of it and set that as new wallpaper on your linux desktop
