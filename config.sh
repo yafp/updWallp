@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#  Name:       config-sh
+#  Name:       config.sh
 #  Function:   Acts as central configuration file for the updWallp scripts
 #  Github:     https://github.com/yafp/updWallp
 #
@@ -8,8 +8,6 @@
 # ---------------------------------------------------------------------
 # CONFIGURATION
 # ---------------------------------------------------------------------
-updWallpDir=""               # Define where the updWallp folder is located- Must be configured
-
 backupFilename="currentBaseWallpaper.png"             # filename for backup copy of selected file
 outputFilename="currentGeneratedWallpaper.png"
 

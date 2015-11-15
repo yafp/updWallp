@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #  Name:       updWallp
-#  Version:    0.3
+#  Version:    0.4
 #  Function:   Script to pick a random image from a folder, generate a dimmed & blured version of it and set it as wallpaper
 #  Usage:      ./updWallp.sh /path/to/yourImageSourceFolder
 #  Github:     https://github.com/yafp/updWallp
@@ -9,12 +9,13 @@
 
 
 # ---------------------------------------------------------------------
-# INCLUDE MAIN CONFIG
+# LOCAL CONFIG
 # ---------------------------------------------------------------------
-source config.sh
-source functions.sh
-
+updWallpDir=""              # define the folder where you copied the updWallp folder to
 imageSourcePath=$1                                    # example: "/home/foo/Pictures"
+
+
+
 
 
 # ---------------------------------------------------------------------
@@ -62,6 +63,9 @@ generateNewWallpaper(){
 # #####################################################################
 clear
 cd $updWallpDir
+source config.sh
+source functions.sh
+#echo $imageSourcePath
 
 printf "${bold}*** updWallp ***${normal}\n\n"
 printf "...Operating system:\t\t $OSTYPE\t\t\t\t\t\t\t${bold}OK${normal}\n"

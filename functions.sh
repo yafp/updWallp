@@ -6,7 +6,6 @@
 #
 
 
-
 # ---------------------------------------------------------------------
 # CHECKUPDWALLPFOLDER
 # ---------------------------------------------------------------------
@@ -31,7 +30,7 @@ function checkupdWallpFolder() {
 function displayNotification() {
    if [ -f $notifyPath ];    # if notify-send exists
    then
-      /usr/bin/notify-send "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
+      $notifyPath "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
    else
       printf "${bold}WARNING:${normal} notify-send not found\n"
    fi
@@ -49,7 +48,7 @@ function setLinuxWallpaper() {
    if [ "$(pidof gnome-settings-daemon)" ]
      then
        printf "...Setting wallpaper using gsettings\t\t\t\t\t\t\t\t${bold}OK${normal}\n"
-       gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
+       /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
        displayNotification "updWallp" "Wallpaper successfully set"
      else
        if [ -f ~/.xinitrc ]

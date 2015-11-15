@@ -8,10 +8,9 @@
 
 
 # ---------------------------------------------------------------------
-# INCLUDE MAIN CONFIG
+# LOCAL CONFIG
 # ---------------------------------------------------------------------
-source config.sh
-source functions.sh
+updWallpDir=""        # define the folder where you copied the updWallp folder to
 
 
 
@@ -20,6 +19,9 @@ source functions.sh
 # #####################################################################
 clear
 cd $updWallpDir
+
+source config.sh
+source functions.sh
 
 checkupdWallpFolder
 setLinuxWallpaper "$backupFilename"        # set the linux wallpaper to the original file
