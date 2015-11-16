@@ -10,7 +10,7 @@
 # ---------------------------------------------------------------------
 # LOCAL CONFIG
 # ---------------------------------------------------------------------
-updWallpDir=""        # define the folder where you copied the updWallp folder to
+updWallpDir="/home/fpoeck/Apps/updWallp"        # define the folder where you copied the updWallp folder to
 
 
 
