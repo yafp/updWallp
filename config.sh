@@ -32,3 +32,6 @@ notifyPath="/usr/bin/notify-send"
 # Time value for updWallShowOrg.sh
 #
 toggleTime=5s                                         # how long the original image is displayed if user manually toggles script: updWallpShowOrg.sh
+
+
+appVersion=0.5
