@@ -10,14 +10,12 @@
 # CHECKUPDWALLPFOLDER
 # ---------------------------------------------------------------------
 function checkupdWallpFolder() {
-   printf "...Checking updWallp working dir\n"
    if [ -d "$updWallpDir" ];                                                    # if script folder is defined
       then
-      printf "...updWallp folder:\t\t$updWallpDir \t\t${bold}OK${normal}\n"      # can continue
+      printf "${bold}OK${normal} ... updWallp folder is set to: $updWallpDir\n"      # can continue
    else
       displayNotification "updWallp" "updWallp folder not configured"
-      printf "${bold}ERROR:${normal} updWallp folder not configured\n"
-      printf "${bold}...aborting now${normal}"
+      printf "${bold}ERROR:${normal} updWallp folder not configured. Aborting\n"
       exit                                                              # otherwise die
    fi
 }
@@ -34,7 +32,7 @@ function displayNotification() {
    then
       $notifyPath "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
    else
-      printf "${bold}WARNING:${normal} notify-send not found\n"
+      printf "${bold}WARNING${normal} ... notify-send not found\n"
    fi
 }
 
@@ -45,13 +43,11 @@ function displayNotification() {
 # SETLINUXWALLPAPER
 # ---------------------------------------------------------------------
 function setLinuxWallpaper() {
-   printf "...Trying to activate the new wallpaper\n"
-
    if [ "$(pidof gnome-settings-daemon)" ]
      then
-       printf "...Setting wallpaper using gsettings\t\t\t\t\t\t\t\t${bold}OK${normal}\n"
        /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
        displayNotification "updWallp" "Wallpaper successfully set"
+       printf "${bold}OK${normal} ... Wallpaper set via gsettings\n"
      else
        if [ -f ~/.xinitrc ]
        then
