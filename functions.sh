@@ -6,6 +6,18 @@
 #
 
 
+
+# ---------------------------------------------------------------------
+# Startroutine
+# ---------------------------------------------------------------------
+function startUp()
+{
+   clear
+   printf "${bold}*** updWallp (Version: $appVersion) ***${normal}\n\n"
+}
+
+
+
 # ---------------------------------------------------------------------
 # Checking the operating system
 # ---------------------------------------------------------------------
@@ -13,9 +25,9 @@ function checkOperatingSystem()
 {
    if [[ $OSTYPE = *linux* ]]
       then
-         printf "${bold}OK${normal} ... Operating system: $OSTYPE\n"
+         printf "${bold}${green}OK${normal} ... Operating system: $OSTYPE\n"
    else
-         printf "${bold}ERROR${normal} ... Unexpected operating system: $OSTYPE Aborting\n"
+         printf "${bold}${red}ERROR${normal} ... Unexpected operating system: $OSTYPE Aborting\n"
          exit
    fi
 }
@@ -28,9 +40,9 @@ function checkOperatingSystem()
 function checkImageMagick() {
    if [ "$(which convert)" ]
    then
-      printf "${bold}OK${normal} ... Found ImageMagick\n"
+      printf "${bold}${green}OK${normal} ... Found ImageMagick\n"
    else
-      printf "${bold}ERROR${normal} ... ImageMagick not found\n"
+      printf "${bold}${red}ERROR${normal} ... ImageMagick not found\n"
       exit
    fi
 }
@@ -43,10 +55,10 @@ function checkImageMagick() {
 function checkupdWallpFolder() {
    if [ -d "$updWallpDir" ];                                                    # if script folder is defined
       then
-      printf "${bold}OK${normal} ... updWallp folder is set to: $updWallpDir\n"      # can continue
+      printf "${bold}${green}OK${normal} ... updWallp folder is set to: $updWallpDir\n"      # can continue
    else
       displayNotification "updWallp" "updWallp folder not configured"
-      printf "${bold}ERROR:${normal} updWallp folder not configured. Aborting\n"
+      printf "${bold}${red}ERROR:${normal} updWallp folder not configured. Aborting\n"
       exit                                                              # otherwise die
    fi
 }
@@ -61,12 +73,12 @@ function checkupdWallpFolder() {
 function checkLocalOrRemoteMode()
 {
    if [ -z "$imageSourcePath" ]; then
-      printf "${bold}OK${normal} ... Remote Mode (Muzei Mode)\n"
+      printf "${bold}${green}OK${normal} ... Remote Mode (Muzei Mode)\n"
       checkRemoteRequirements
       getRemoteMuzeiImage
    else
-      printf "${bold}OK${normal} ... Local Mode\n"
-      printf "${bold}OK${normal} ... Submitted image path: "$imageSourcePath"\n"
+      printf "${bold}${green}OK${normal} ... Local Mode\n"
+      printf "${bold}${green}OK${normal} ... Submitted image path: "$imageSourcePath"\n"
       checkImageSourceFolder
    fi
 }
@@ -84,18 +96,18 @@ function checkRemoteRequirements()
    # check for curl
    if [ "$(which curl)" ]
    then
-      printf "${bold}OK${normal} ... Found cURL (Muzei-Mode)\n"
+      printf "${bold}${green}OK${normal} ... Found cURL (Muzei-Mode)\n"
    else
-      printf "${bold}ERROR${normal} ... cURL not found (Muzei-Mode). Aborting\n"
+      printf "${bold}${red}ERROR${normal} ... cURL not found (Muzei-Mode). Aborting\n"
       exit
    fi
 
    # check for jq
    if [ "$(which jq)" ]
    then
-      printf "${bold}OK${normal} ... Found JQ (Muzei-Mode)\n"
+      printf "${bold}${green}OK${normal} ... Found JQ (Muzei-Mode)\n"
    else
-      printf "${bold}ERROR${normal} ... JQ not found (Muzei-Mode). Aborting\n"
+      printf "${bold}${red}ERROR${normal} ... JQ not found (Muzei-Mode). Aborting\n"
       exit
    fi
 }
@@ -110,7 +122,7 @@ function displayNotification() {
    then
       $notifyPath "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
    else
-      printf "${bold}WARNING${normal} ... notify-send not found\n"
+      printf "${bold}${yellow}WARNING${normal} ... notify-send not found\n"
    fi
 }
 
@@ -125,7 +137,7 @@ function setLinuxWallpaper() {
      then
        /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
        displayNotification "updWallp" "Wallpaper successfully set"
-       printf "${bold}OK${normal} ... Wallpaper set via gsettings\n"
+       printf "${bold}${green}OK${normal} ... Wallpaper set via gsettings\n"
      else
        if [ -f ~/.xinitrc ]
        then
@@ -165,10 +177,10 @@ function setLinuxWallpaper() {
 function checkImageSourceFolder() {
    if [ -d "$imageSourcePath" ];                                                 # if image source folder exists
       then
-      printf "${bold}OK${normal} ... Source folder: $imageSourcePath is valid\n"      # can continue
+      printf "${bold}${green}OK${normal} ... Source folder: $imageSourcePath is valid\n"      # can continue
       getNewRandomLocalFilePath                                                  # get a new local filepath
    else
-      printf "${bold}ERROR${normal} ... Local mode but image dir isnt a valid directory. Aborting\n"      # can continue
+      printf "${bold}${red}ERROR${normal} ... Local mode but image dir isnt a valid directory. Aborting\n"      # can continue
       exit
    fi
 }
@@ -188,10 +200,10 @@ function getRemoteMuzeiImage()
       if [ "$(cmp muzeich.json muzeich2.json)" ]
          then
          mv muzeich2.json muzeich.json
-         printf "${bold}OK${normal} ... There is a new Muzei image available. Loading it.\n"
+         printf "${bold}${green}OK${normal} ... There is a new Muzei image available. Loading it.\n"
       else
          rm muzeich2.json
-         printf "${bold}OK${normal} ... There is no new Muzei image available. Nothing to do here.\n"
+         printf "${bold}${green}OK${normal} ... There is no new Muzei image available. Nothing to do here.\n"
          #exit
       fi
    fi
@@ -207,7 +219,7 @@ function getRemoteMuzeiImage()
    convert $imageFile $muzeiFilename
 
    newImage=$updWallpDir/$muzeiFilename
-   printf "${bold}OK${normal} ... Finished getting latest Muzei image.\n"
+   printf "${bold}${green}OK${normal} ... Finished getting latest Muzei image.\n"
 }
 
 
@@ -221,7 +233,7 @@ function getRemoteMuzeiImage()
 function getNewRandomLocalFilePath()
 {
    newImage=$(find $imageSourcePath -type f | shuf -n 1)             # pick random image from source folder
-   printf "${bold}OK${normal} ... Selected a new random image from local folder\n"
+   printf "${bold}${green}OK${normal} ... Selected a new random image from local folder\n"
 }
 
 
@@ -234,8 +246,26 @@ function getNewRandomLocalFilePath()
 function generateNewWallpaper()
 {
    convert "$newImage" $backupFilename                               # copy random base image to project folder
+
+   # Specialmode 1: Grayscale
+   if [ "$enableGrayscaleMode" = true ]
+      then
+      convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+      printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in $updWallpDir\n"
+      return
+   fi
+
+   # Specialmode 1: Sepia
+   if [ "$enableSepiaMode" = true ]
+      then
+      convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+      printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in $updWallpDir\n"
+      return
+   fi
+
+   # Normal mode
    convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-   printf "${bold}OK${normal} ... Generated the new Wallpaper in $updWallpDir\n"
+   printf "${bold}${green}OK${normal} ... Generated the new wallpaper in $updWallpDir\n"
 }
 
 
@@ -254,5 +284,5 @@ function cleanupUpdWallpDir()
       then
       rm $muzeiFilename
    fi
-   printf "${bold}OK${normal} ... Finished cleaning up $updWallpDir\n"
+   printf "${bold}${green}OK${normal} ... Finished cleaning up $updWallpDir\n"
 }
