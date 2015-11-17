@@ -4,52 +4,57 @@
 
 
 ## About updWallp
-updWallp is a small bash script which picks a random image from a user-defined local folder,
-generates a dimmed & blured version of it and set that as new wallpaper on your linux desktop.
+updWallp is a small bash based project which do handle dynamic blured & dimmed wallpapers for your Linux desktops.
+It offers 2 operation modes - local and remote.
 
-In addition a second scripts offers the option to set the unmodified version of the current wallpaper for x seconds as wallpaper.
+In local mode the main script (updWallp.sh) is using a radom image from a user-supplied local folder, generates a blured & dimmed version of this image and sets it as wallpaper.
 
-The basic idea is inspired by Muzei
+In remote mode (aka Muzei mode) it picks the picture of the day Muzei offers from the internet, generates a blured & dimmed version of this image and sets it as wallpaper.
+
+In addition a second scripts (updWallpShowOrg.sh) offers the option to temporary toggle back to the non-blured & dimmed version of the current wallpaper for x seconds.
+
+
+The basic idea is inspired by Muzei and LinMuzei
 
 - https://github.com/romannurik/muzei/
-
-and
 
 - https://github.com/aepirli/linmuzei
 
 
 
 ## Requirements
+### In general
 - ImageMagick (must have)
 
+### For local mode
+- nothing 
+
+### For remote mode (Muzei mode)
+- cURL (to download images)
+
+- jq (to parse the muzei.json)
+
+### Nice to have
 - notify-send (nice to have for notifications)
 
 
 
 ## Usage
-### To set the blured & dimmed version as wallpaper
+### updWallp.sh (To set the blured & dimmed version as wallpaper)
+#### Local mode
 Launch it manually or via cron
 
-> ./updWallp.sh /path/to/yourImageSourceFolder
+> ./updWallp.sh /path/to/yourLocalImageFolder
 
-### To see the original version of the current wallpaper for x seconds
+#### Remote mode
+Launch it manually or via cron
+
+> ./updWallp.sh
+
+
+### updWallpShowOrg.sh (To see the original version of the current wallpaper for x seconds)
 Launch it manually
 
 > ./updWallpShowOrg.sh
 
 
-## What it does
-### updWallp.sh
-- scripts chooses a random image from the source folder
-
-- creates a fallback copy of that image
-
-- creates a dimmed and blured copy of that image
-
-- sets the dimmed and blured copy of that image as new wallpaper
-
-
-### updWallpShowOrg.sh
-- sets the unmodified version of the current wallpaper for x seconds as wallpaper
-
-- toggles back to the blured & dimmed version
