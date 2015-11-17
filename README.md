@@ -27,7 +27,7 @@ The basic idea is inspired by Muzei and LinMuzei
 - ImageMagick (must have)
 
 ### For local mode
-- nothing 
+- nothing additional
 
 ### For remote mode (Muzei mode)
 - cURL (to download images)
