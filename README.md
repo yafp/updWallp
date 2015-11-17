@@ -23,38 +23,30 @@ The basic idea is inspired by Muzei and LinMuzei
 
 
 ## Requirements
-### In general
 - ImageMagick (must have)
 
-### For local mode
-- nothing additional
+- cURL (Remote mode: to download images)
 
-### For remote mode (Muzei mode)
-- cURL (to download images)
+- jq (Remote mode: to parse the muzei.json)
 
-- jq (to parse the muzei.json)
-
-### Nice to have
+## Nice to have
 - notify-send (nice to have for notifications)
 
 
 
 ## Usage
-### updWallp.sh (To set the blured & dimmed version as wallpaper)
-#### Local mode
+### updWallp.sh (Local mode)
 Launch it manually or via cron
 
 > ./updWallp.sh /path/to/yourLocalImageFolder
 
-#### Remote mode
+### updWallp.sh (Remote mode)
 Launch it manually or via cron
 
 > ./updWallp.sh
 
 
-### updWallpShowOrg.sh (To see the original version of the current wallpaper for x seconds)
+### updWallpShowOrg.sh
 Launch it manually
 
 > ./updWallpShowOrg.sh
-
-
