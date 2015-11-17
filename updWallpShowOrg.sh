@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-#  Name:       updWallpShowOrg
-#  Function:   Script to pick a random image from a folder, generate a dimmed & blured version of it and set it as wallpaper
+#  Name:       updWallpShowOrg.sh
+#  Function:   Script to temporary toggle back to the original image for a defined time
 #  Usage:      ./updWallpShowOrg.sh
 #  Github:     https://github.com/yafp/updWallp
 #
@@ -25,5 +25,7 @@ source functions.sh
 
 checkupdWallpFolder
 setLinuxWallpaper "$backupFilename"        # set the linux wallpaper to the original file
+
 sleep "$toggleTime"
+
 setLinuxWallpaper "$outputFilename"        # set the linux wallpaper back to the dimmed/blured version
