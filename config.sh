@@ -31,14 +31,13 @@ dimCommand=""
 
 
 # Special-Mode: Grayscale
-#
-enableGrayscaleMode=false                            # true or false. If true - images get converted to grayscale (black & white)
+enableGrayscaleMode=true                            # true or false. If true - images get converted to grayscale (black & white)
 grayscaleCommand="-type Grayscale"
 # or
-# Special-Mode: Sepia
 #
+# Special-Mode: Sepia
 enableSepiaMode=false                                 # true or false.
-sepiaCommand="-sepia-tone 80%"
+sepiaCommand="-sepia-tone 90%"
 
 
 
@@ -76,7 +75,7 @@ notifyPath="/usr/bin/notify-send"
 
 
 # Time value for updWallShowOrg.sh
-toggleTime=5s                                         # how long the original image is displayed if user manually toggles script: updWallpShowOrg.sh
+toggleTime=10s                                         # how long the original image is displayed if user manually toggles script: updWallpShowOrg.sh
 
 
 
@@ -84,4 +83,4 @@ toggleTime=5s                                         # how long the original im
 # DONT TOUCH
 # ---------------------------------------------------------------------
 # AppVersion
-appVersion=0.7
+appVersion=0.7.1

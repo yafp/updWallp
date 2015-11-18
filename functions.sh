@@ -136,7 +136,7 @@ function setLinuxWallpaper() {
    if [ "$(pidof gnome-settings-daemon)" ]
      then
        /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
-       displayNotification "updWallp" "Wallpaper successfully set"
+       displayNotification "updWallp" "Wallpaper updated"
        printf "${bold}${green}OK${normal} ... Wallpaper set via gsettings\n"
      else
        if [ -f ~/.xinitrc ]
@@ -247,25 +247,20 @@ function generateNewWallpaper()
 {
    convert "$newImage" $backupFilename                               # copy random base image to project folder
 
-   # Specialmode 1: Grayscale
-   if [ "$enableGrayscaleMode" = true ]
+   if [ "$enableGrayscaleMode" = true ]      # Specialmode 1: if Grayscale is enabled in config
       then
       convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
       printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in $updWallpDir\n"
       return
-   fi
-
-   # Specialmode 1: Sepia
-   if [ "$enableSepiaMode" = true ]
+   elif [ "$enableSepiaMode" = true ]        # Specialmode 2: if Sepia is enabled in config
       then
       convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
       printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in $updWallpDir\n"
       return
+   else                                      # Normal mode
+      convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+      printf "${bold}${green}OK${normal} ... Generated the new wallpaper in $updWallpDir\n"
    fi
-
-   # Normal mode
-   convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-   printf "${bold}${green}OK${normal} ... Generated the new wallpaper in $updWallpDir\n"
 }
 
 
