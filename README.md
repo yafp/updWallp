@@ -35,17 +35,19 @@ The basic idea is inspired by Muzei and LinMuzei
 
 ## Usage
 ### updWallp.sh (Local mode)
-Launch it manually or via cron
+Launch it manually
 
 > ./updWallp.sh /path/to/yourLocalImageFolder
 
+or via cron
 > */30 * * * * /path/to/updWallp/updWallp.sh /path/to/yourLocalImageFolder >/dev/null 2>&1
 
 ### updWallp.sh (Remote mode)
-Launch it manually or via cron
+Launch it manually
 
 > ./updWallp.sh
 
+or via cron
 > */30 * * * * /path/to/updWallp/updWallp.sh >/dev/null 2>&1
 
 
