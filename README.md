@@ -23,14 +23,13 @@ The basic idea is inspired by Muzei and LinMuzei
 
 
 ## Requirements
-- ImageMagick (must have)
+- ImageMagick (needed)
 
-- cURL (Remote mode: to download images)
+- cURL (needed in Remote mode: to download images)
 
-- jq (Remote mode: to parse the muzei.json)
+- jq (needed in Remote mode: to parse the muzei.json)
 
-## Nice to have
-- notify-send (nice to have for notifications)
+- notify-send (optional: for desktop notifications)
 
 
 
@@ -40,10 +39,14 @@ Launch it manually or via cron
 
 > ./updWallp.sh /path/to/yourLocalImageFolder
 
+> */30 * * * * /path/to/updWallp/updWallp.sh /path/to/yourLocalImageFolder >/dev/null 2>&1
+
 ### updWallp.sh (Remote mode)
 Launch it manually or via cron
 
 > ./updWallp.sh
+
+> */30 * * * * /path/to/updWallp/updWallp.sh >/dev/null 2>&1
 
 
 ### updWallpShowOrg.sh
