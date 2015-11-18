@@ -10,22 +10,30 @@
 # ---------------------------------------------------------------------
 # LOCAL CONFIG
 # ---------------------------------------------------------------------
-updWallpDir="/home/fpoeck/Apps/updWallp"        # define the folder where you copied the updWallp folder to
+updWallpDir=""        # define the folder where you copied the updWallp folder to
 
 
 
 # #####################################################################
 # SCRIPT-LOGIC
 # #####################################################################
-clear
-cd $updWallpDir
+if [ -d "$updWallpDir" ];
+   then
+   clear
+   cd $updWallpDir
 
-source config.sh
-source functions.sh
+   source config.sh
+   source functions.sh
 
-checkupdWallpFolder
-setLinuxWallpaper "$backupFilename"        # set the linux wallpaper to the original file
+   printf "${bold}${green}OK${normal} ... updWallp folder is set to: $updWallpDir\n"
 
-sleep "$toggleTime"
+   startUp
+   checkOperatingSystem                         # check operating system
 
-setLinuxWallpaper "$outputFilename"        # set the linux wallpaper back to the dimmed/blured version
+   setLinuxWallpaper "$backupFilename"        # set the linux wallpaper to the original file
+   sleep "$toggleTime"
+   setLinuxWallpaper "$outputFilename"        # set the linux wallpaper back to the dimmed/blured version
+else
+   printf "${bold}${red}ERROR:${normal} updWallp folder not configured or not valid. Aborting\n"
+   exit                                                              # otherwise die
+fi

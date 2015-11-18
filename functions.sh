@@ -50,22 +50,6 @@ function checkImageMagick() {
 
 
 # ---------------------------------------------------------------------
-# CHECKUPDWALLPFOLDER
-# ---------------------------------------------------------------------
-function checkupdWallpFolder() {
-   if [ -d "$updWallpDir" ];                                                    # if script folder is defined
-      then
-      printf "${bold}${green}OK${normal} ... updWallp folder is set to: $updWallpDir\n"      # can continue
-   else
-      displayNotification "updWallp" "updWallp folder not configured"
-      printf "${bold}${red}ERROR:${normal} updWallp folder not configured. Aborting\n"
-      exit                                                              # otherwise die
-   fi
-}
-
-
-
-# ---------------------------------------------------------------------
 # Check if the user wants to use updWallp in local or remote mode
 # - local: use images from a local image folder
 # - remote: use the art-picture of the current day delivered by muzei (muzei-mode)
@@ -78,7 +62,6 @@ function checkLocalOrRemoteMode()
       getRemoteMuzeiImage
    else
       printf "${bold}${green}OK${normal} ... Local Mode\n"
-      printf "${bold}${green}OK${normal} ... Submitted image path: "$imageSourcePath"\n"
       checkImageSourceFolder
    fi
 }
@@ -177,7 +160,7 @@ function setLinuxWallpaper() {
 function checkImageSourceFolder() {
    if [ -d "$imageSourcePath" ];                                                 # if image source folder exists
       then
-      printf "${bold}${green}OK${normal} ... Source folder: $imageSourcePath is valid\n"      # can continue
+      printf "${bold}${green}OK${normal} ... Image folder: $imageSourcePath is valid\n"      # can continue
       getNewRandomLocalFilePath                                                  # get a new local filepath
    else
       printf "${bold}${red}ERROR${normal} ... Local mode but image dir isnt a valid directory. Aborting\n"      # can continue

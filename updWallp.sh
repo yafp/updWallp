@@ -12,31 +12,38 @@
 # ---------------------------------------------------------------------
 # LOCAL CONFIG
 # ---------------------------------------------------------------------
-updWallpDir="/home/fpoeck/Apps/updWallp"              # define the folder where you copied the updWallp folder to
+updWallpDir=""              # define the folder where you copied the updWallp folder to
 muzeiFilename="muzeiImage.png"
 imageSourcePath=$1
+
 
 
 
 # #####################################################################
 # SCRIPT-LOGIC
 # #####################################################################
-cd $updWallpDir
+if [ -d "$updWallpDir" ];
+   then
+   cd $updWallpDir
 
-source config.sh
-source functions.sh
+   source config.sh
+   source functions.sh
 
+   printf "${bold}${green}OK${normal} ... updWallp folder is set to: $updWallpDir\n"
 
-# Pre-Work (Checks)
-startUp
-checkOperatingSystem                         # check operating system
-checkImageMagick                             # function to check if ImageMagick is installed
-checkupdWallpFolder                          # function to check if user configured the script folder
-checkLocalOrRemoteMode                       # check if script runs in local or remote (muzei) mode
+   # Pre-Work (Checks)
+   startUp
+   checkOperatingSystem                         # check operating system
+   checkImageMagick                             # function to check if ImageMagick is installed
+   checkLocalOrRemoteMode                       # check if script runs in local or remote (muzei) mode
 
-# Core work
-generateNewWallpaper                         # generates a new wallpaper
-setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
+   # Core work
+   generateNewWallpaper                         # generates a new wallpaper
+   setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
 
-# Post work
-cleanupUpdWallpDir                           # Cleaning up
+   # Post work
+   cleanupUpdWallpDir                           # Cleaning up
+else
+   printf "${bold}${red}ERROR:${normal} updWallp folder not configured or not valid. Aborting\n"
+   exit                                                              # otherwise die
+fi
