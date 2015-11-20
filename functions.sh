@@ -101,11 +101,14 @@ function checkRemoteRequirements()
 # NOTIFICATION
 # ---------------------------------------------------------------------
 function displayNotification() {
-   if [ -f $notifyPath ];    # if notify-send exists
-   then
-      $notifyPath "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
-   else
-      printf "${bold}${yellow}WARNING${normal} ... notify-send not found\n"
+   if [ "$enableNotifications" = true ]      # If notifications are enabled at all
+      then
+      if [ -f $notifyPath ];    # if notify-send exists
+      then
+         $notifyPath "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
+      else
+         printf "${bold}${yellow}WARNING${normal} ... notify-send not found\n"
+      fi
    fi
 }
 
@@ -124,27 +127,29 @@ function setLinuxWallpaper() {
      else
        if [ -f ~/.xinitrc ]
        then
+         printf "${bold}${green}OK${normal} ... found ~/.xinitrc\n"
          if [ "$(which feh)" ]
          then
-           printf "Gnome-settings-daemons not running, setting wallpaper with feh..."
+           printf "${bold}${green}OK${normal} ... Gnome-settings-daemons not running, setting wallpaper with feh\n"
            feh $outputFilename
            feh_xinitSet
          elif [ "$(which hsetroot)" ]
          then
-           printf "Gnome-settings-daemons not running, setting wallpaper with hsetroot..."
+           printf "${bold}${green}OK${normal} ... Gnome-settings-daemons not running, setting wallpaper with hsetroot\n"
            hsetroot -cover $outputFilename
            hsetroot_xinitSet
          elif [ "$(which nitrogen)" ]
          then
-           printf "Gnome-settings-daemons not running, setting wallpaper with nitrogen..."
+           printf "${bold}${green}OK${normal} ... Gnome-settings-daemons not running, setting wallpaper with nitrogen\n"
            nitrogen $outputFilename
            nitrogen_xinitSet
          else
-           printf "You need to have either feh, hsetroot or nitrogen, bruhbruh."
+           printf "${bold}${red}ERROR${normal} ... You need to have either feh, hsetroot or nitrogen, bruhbruh.\n"
            exit
          fi
        else
-         printf "You should have a ~/.xinitrc file."
+         printf "${bold}${red}ERROR${normal} ... You should have a ~/.xinitrc file\n"
+         printf "${bold}${red}ERROR${normal} ... Was unable to set the wallpaper\n"
          exit
        fi
      fi

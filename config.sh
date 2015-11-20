@@ -9,6 +9,14 @@
 # CONFIGURATION
 # ---------------------------------------------------------------------
 
+
+
+
+
+
+# ---------------------------------------------------------------------
+# IMAGEMAGICK RELATED
+# ---------------------------------------------------------------------
 # Blur
 #
 #    -blur  {radius}x{sigma}
@@ -20,7 +28,6 @@
 #
 # Example: -channel RGBA  -blur 0x8
 blurCommand="-channel RGBA  -blur 0x16"
-
 
 
 # Dim
@@ -41,19 +48,24 @@ sepiaCommand="-sepia-tone 90%"
 
 
 
-# Filenames for generated and backup of source image
-#
+# ---------------------------------------------------------------------
+# FILENAMES for ImageCreation
+# ---------------------------------------------------------------------
 backupFilename="currentBaseWallpaper.png"             # filename for backup copy of selected file
-outputFilename="currentGeneratedWallpaper.png"
+outputFilename="currentGeneratedWallpaper.png"        # generated Wallpaper which is set as wallpaper
 
 
-# Text Styles for printf/echo
-#
-bold=$(tput bold)                                     # cli output in bold
-normal=$(tput sgr0)                                   # cli output in normal
+
+
+# ---------------------------------------------------------------------
+# TEXT FORMATTING RELATED
+# ---------------------------------------------------------------------
+bold=$(tput bold)
+normal=$(tput sgr0)
 blink=$(tput blink)
 reverse=$(tput smso)
 underline=$(tput smul)
+
 # colors
 black=$(tput setaf 0)
 red=$(tput setaf 1)
@@ -69,13 +81,22 @@ bright=$(tput bold)
 
 
 
-# Notification-related
-notifyPath="/usr/bin/notify-send"
+
+# ---------------------------------------------------------------------
+# NOTIFICATION RELATED
+# ---------------------------------------------------------------------
+enableNotifications=false                             # true or false
+notifyPath="/usr/bin/notify-send"                     # defines the path to notify-send which is used to display desktop notifications
 
 
 
+
+# ---------------------------------------------------------------------
+# ./updWallpShowOrg.sh specific
+# ---------------------------------------------------------------------
 # Time value for updWallShowOrg.sh
 toggleTime=10s                                         # how long the original image is displayed if user manually toggles script: updWallpShowOrg.sh
+
 
 
 
@@ -83,4 +104,4 @@ toggleTime=10s                                         # how long the original i
 # DONT TOUCH
 # ---------------------------------------------------------------------
 # AppVersion
-appVersion=0.7.2
+appVersion=0.7.3
