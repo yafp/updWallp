@@ -49,24 +49,6 @@ function checkImageMagick() {
 
 
 
-# ---------------------------------------------------------------------
-# Check if the user wants to use updWallp in local or remote mode
-# - local: use images from a local image folder
-# - remote: use the art-picture of the current day delivered by muzei (muzei-mode)
-# ---------------------------------------------------------------------
-function checkLocalOrRemoteMode()
-{
-   if [ -z "$imageSourcePath" ]; then
-      printf "${bold}${green}OK${normal} ... Remote Mode (Muzei Mode)\n"
-      checkRemoteRequirements
-      getRemoteMuzeiImage
-   else
-      printf "${bold}${green}OK${normal} ... Local Mode\n"
-      checkImageSourceFolder
-   fi
-}
-
-
 
 
 # ---------------------------------------------------------------------
