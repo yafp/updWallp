@@ -12,7 +12,7 @@
 # ---------------------------------------------------------------------
 # LOCAL CONFIG
 # ---------------------------------------------------------------------
-updWallpDir="/home/fidel/Apps/updWallp"              # define the folder where you copied the updWallp folder to (Example: /home/username/updWallp)
+updWallpDir=""              # define the folder where you copied the updWallp folder to (Example: /home/username/updWallp)
 muzeiFilename="muzeiImage.png"
 primaryParamter=$1
 imageSourcePath=$2
