@@ -7,9 +7,9 @@
 **updWallp** is a small bash based project which creates blured & dimmed wallpapers for your Linux desktops.
 It offers 2 operation modes - local and remote.
 
-In **local mode** *updWallp.sh* is using a random image from a user-supplied local folder to generate a blured & dimmed copy of it  and sets the new created image as wallpaper.
+In **local-mode** *updWallp.sh* is using a random image from a user-supplied local folder to generate a blured & dimmed copy of it  and sets the new created image as wallpaper.
 
-In **remote mode** (aka *Muzei* mode) it picks the muzei-picture-of-the-day from the internet, generates a blured & dimmed version of it and sets the new created image as wallpaper.
+In **remote-mode** (aka *Muzei* mode) it picks the muzei-picture-of-the-day from the internet, generates a blured & dimmed version of it and sets the new created image as wallpaper.
 
 
 A second bash script (*updWallpShowOrg.sh*) offers the option to temporary toggle back to the original (non-blured & dimmed) version of the current wallpaper for x seconds.
@@ -35,21 +35,21 @@ The basic idea is inspired by Muzei and LinMuzei
 
 
 ## Usage
-### updWallp.sh (Local mode)
+### updWallp.sh (Local-mode)
 Launch it manually
 
-> ./updWallp.sh /path/to/yourLocalImageFolder
+> ./updWallp.sh -l /path/to/yourLocalImageFolder
 
 or via cron
-> */30 * * * * /path/to/updWallp/updWallp.sh /path/to/yourLocalImageFolder >/dev/null 2>&1
+> */30 * * * * /path/to/updWallp/updWallp.sh -l /path/to/yourLocalImageFolder >/dev/null 2>&1
 
-### updWallp.sh (Remote mode)
+### updWallp.sh (Remote-mode)
 Launch it manually
 
-> ./updWallp.sh
+> ./updWallp.sh -r
 
 or via cron
-> */30 * * * * /path/to/updWallp/updWallp.sh >/dev/null 2>&1
+> */30 * * * * /path/to/updWallp/updWallp.sh -r >/dev/null 2>&1
 
 
 ### updWallpShowOrg.sh
