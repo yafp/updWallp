@@ -23,10 +23,18 @@ function startUp()
 # ---------------------------------------------------------------------
 function checkOperatingSystem()
 {
-   if [[ $OSTYPE = *linux* ]]
+   if [[ $OSTYPE = *linux* ]] # we are on linux - so continue checking
       then
          printf "${bold}${green}OK${normal} ... Operating system: $OSTYPE\n"
-   else
+
+         if [ "$(pidof gnome-settings-daemon)" ]; # found gsettings - which is needed to set the wallpaper
+            then
+               printf "${bold}${green}OK${normal} ... Found gsettings\n"
+         else # big problem - we cant see the wallpaper on non-gnome setups so far
+            printf "${bold}${red}ERROR${normal} ... Setting wallpaper is currently only supported on Gnome (using: gsettings / gnome-settings-daemon). Aborting\n\n"
+            exit
+         fi
+   else # not linux -> not supported
          printf "${bold}${red}ERROR${normal} ... Unexpected operating system: $OSTYPE Aborting\n"
          exit
    fi
@@ -101,40 +109,16 @@ function displayNotification() {
 # SETLINUXWALLPAPER
 # ---------------------------------------------------------------------
 function setLinuxWallpaper() {
-   if [ "$(pidof gnome-settings-daemon)" ]
-     then
-       /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
-       displayNotification "updWallp" "Wallpaper updated"
-       printf "${bold}${green}OK${normal} ... Wallpaper set via gsettings\n"
-     else
-       if [ -f ~/.xinitrc ]
-       then
-         printf "${bold}${green}OK${normal} ... found ~/.xinitrc\n"
-         if [ "$(which feh)" ]
-         then
-           printf "${bold}${green}OK${normal} ... Gnome-settings-daemons not running, setting wallpaper with feh\n"
-           feh $outputFilename
-           feh_xinitSet
-         elif [ "$(which hsetroot)" ]
-         then
-           printf "${bold}${green}OK${normal} ... Gnome-settings-daemons not running, setting wallpaper with hsetroot\n"
-           hsetroot -cover $outputFilename
-           hsetroot_xinitSet
-         elif [ "$(which nitrogen)" ]
-         then
-           printf "${bold}${green}OK${normal} ... Gnome-settings-daemons not running, setting wallpaper with nitrogen\n"
-           nitrogen $outputFilename
-           nitrogen_xinitSet
-         else
-           printf "${bold}${red}ERROR${normal} ... You need to have either feh, hsetroot or nitrogen, bruhbruh.\n"
-           exit
-         fi
-       else
-         printf "${bold}${red}ERROR${normal} ... You should have a ~/.xinitrc file\n"
-         printf "${bold}${red}ERROR${normal} ... Was unable to set the wallpaper\n"
-         exit
-       fi
-     fi
+   if [ "$(pidof gnome-settings-daemon)" ];
+      then
+         /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
+         displayNotification "updWallp" "Wallpaper updated"
+         printf "${bold}${green}OK${normal} ... Wallpaper set via gsettings\n"
+   else
+        printf "${bold}${red}ERROR${normal} ... Sorry dude but your system is not supported.\n"
+        printf "${bold}${red}ERROR${normal} ... Currently only Gnome is supported (using: gsettings)\n"
+        exit
+   fi
 }
 
 
@@ -145,9 +129,9 @@ function setLinuxWallpaper() {
 # Exit if the user submits a non-valid path
 # ---------------------------------------------------------------------
 function checkImageSourceFolder() {
-   if [ -d "$localUserImageFolder" ];                                                 # if image source folder exists
+   if [ -d "$localUserImageFolder" ];                                                              # if image source folder exists
       then
-      printf "${bold}${green}OK${normal} ... Image folder: $localUserImageFolder is valid\n"      # can continue
+      printf "${bold}${green}OK${normal} ... Image folder: $localUserImageFolder is valid\n"       # can continue
       getNewRandomLocalFilePath                                                  # get a new local filepath
    else
       printf "${bold}${red}ERROR${normal} ... Local mode but defined image dir ($localUserImageFolder) isnt a valid directory. Aborting\n"      # can continue

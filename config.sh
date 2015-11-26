@@ -10,10 +10,6 @@
 # ---------------------------------------------------------------------
 
 
-
-
-
-
 # ---------------------------------------------------------------------
 # IMAGEMAGICK RELATED
 # ---------------------------------------------------------------------
@@ -49,15 +45,6 @@ sepiaCommand="-sepia-tone 90%"
 
 
 # ---------------------------------------------------------------------
-# FILENAMES for ImageCreation
-# ---------------------------------------------------------------------
-backupFilename="currentBaseWallpaper.png"             # filename for backup copy of selected file
-outputFilename="currentGeneratedWallpaper.png"        # generated Wallpaper which is set as wallpaper
-
-
-
-
-# ---------------------------------------------------------------------
 # TEXT FORMATTING RELATED
 # ---------------------------------------------------------------------
 bold=$(tput bold)
@@ -81,13 +68,11 @@ bright=$(tput bold)
 
 
 
-
 # ---------------------------------------------------------------------
 # NOTIFICATION RELATED
 # ---------------------------------------------------------------------
 enableNotifications=false                             # true or false
 notifyPath="/usr/bin/notify-send"                     # defines the path to notify-send which is used to display desktop notifications
-
 
 
 
@@ -99,9 +84,16 @@ toggleTime=10s                                         # how long the original i
 
 
 
+# ---------------------------------------------------------------------
+# FILENAMES for ImageCreation
+# ---------------------------------------------------------------------
+backupFilename="currentBaseWallpaper.png"             # filename for backup copy of selected file
+outputFilename="currentGeneratedWallpaper.png"        # generated Wallpaper which is set as wallpaper
+
+
 
 # ---------------------------------------------------------------------
 # DONT TOUCH
 # ---------------------------------------------------------------------
 # AppVersion
-appVersion=0.7.5
+appVersion=0.7.6
