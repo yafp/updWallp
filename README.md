@@ -38,9 +38,11 @@ The basic idea is inspired by Muzei and LinMuzei
 Downloads the latest build from https://github.com/yafp/updWallp/archive/master.zip
 
 ### Configuration
-As initial step you have to define the installation directory in the two major script **updWallp.sh** and **updWallpShowOrg.sh**. Please see the following example:
+As initial step you have to define the installation directory in the two major script **updWallp.sh** and **updWallpShowOrg.sh**. 
 
-From:
+Please see the following example:
+
+Change
 ```bash
 updWallpDir=""
 ```
@@ -50,11 +52,12 @@ to something similar to this
 updWallpDir="/home/username/path/to/updWallpFolder"
 ```
 
-After that you can do the finetuning in *config.sh*.
+After that you can do the finetuning in **config.sh**.
 
 
 ### Usage
 #### updWallp.sh 
+##### General
 ![updWallp_h](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_h.png)
 
 ##### Local-mode
