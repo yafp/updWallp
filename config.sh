@@ -104,4 +104,4 @@ toggleTime=10s                                         # how long the original i
 # DONT TOUCH
 # ---------------------------------------------------------------------
 # AppVersion
-appVersion=0.7.4
+appVersion=0.7.5

@@ -145,12 +145,12 @@ function setLinuxWallpaper() {
 # Exit if the user submits a non-valid path
 # ---------------------------------------------------------------------
 function checkImageSourceFolder() {
-   if [ -d "$imageSourcePath" ];                                                 # if image source folder exists
+   if [ -d "$localUserImageFolder" ];                                                 # if image source folder exists
       then
-      printf "${bold}${green}OK${normal} ... Image folder: $imageSourcePath is valid\n"      # can continue
+      printf "${bold}${green}OK${normal} ... Image folder: $localUserImageFolder is valid\n"      # can continue
       getNewRandomLocalFilePath                                                  # get a new local filepath
    else
-      printf "${bold}${red}ERROR${normal} ... Local mode but image dir isnt a valid directory. Aborting\n"      # can continue
+      printf "${bold}${red}ERROR${normal} ... Local mode but defined image dir ($localUserImageFolder) isnt a valid directory. Aborting\n"      # can continue
       exit
    fi
 }
@@ -202,7 +202,7 @@ function getRemoteMuzeiImage()
 # ---------------------------------------------------------------------
 function getNewRandomLocalFilePath()
 {
-   newImage=$(find $imageSourcePath -type f | shuf -n 1)             # pick random image from source folder
+   newImage=$(find $localUserImageFolder -type f | shuf -n 1)             # pick random image from source folder
    printf "${bold}${green}OK${normal} ... Selected a new random image from local folder\n"
 }
 

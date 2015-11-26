@@ -1,9 +1,10 @@
 #!/bin/bash
 #
-#  Name:		updWallpShowOrg.sh
+#  Name:			updWallpShowOrg.sh
 #  Function:	Script to temporary toggle back to the original image for a defined time
 #  Usage:		./updWallpShowOrg.sh
-#				./updWallpShowOrg.sh -h
+#					./updWallpShowOrg.sh -h
+#
 #  Github:		https://github.com/yafp/updWallp
 #
 
@@ -42,10 +43,10 @@ if [ -d "$updWallpDir" ]; # if updWallpDir is configured and valid
 				printf "${bold}Documentation:${normal}\n"
 				printf "  https://github.com/yafp/updWallp/wiki\n"
 		else
-			printf "${bold}${red}ERROR:${normal} Invalid parameter '$1'\n\nStart with: '-h' for some basic instructions.\n"
+			printf "${bold}${red}ERROR${normal} Invalid parameter '$1'\n\nStart with: '-h' for some basic instructions.\n"
 		fi
 	fi
 else		# updWallpDir is not configured
-	printf "${bold}${red}ERROR:${normal} Variable 'updWallpDir' is not not configured or not valid. Aborting\n"
+	printf "${bold}${red}ERROR${normal} Variable 'updWallpDir' is not not configured or not valid. Aborting\n"
 	exit                                                              # otherwise die
 fi
