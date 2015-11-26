@@ -34,9 +34,7 @@ The basic idea is inspired by Muzei and LinMuzei
 
 
 ## Configuration
-As initial step you have to define the installation directory in the two major script:
-* updWallp.sh
-* updWallpShowOrg.sh
+As initial step you have to define the installation directory in the two major script **updWallp.sh** and **updWallpShowOrg.sh**. Please see the following example:
 
 From:
 ```bash
@@ -53,9 +51,14 @@ After that you can do the finetuning in *config.sh*.
 
 ## Usage
 ### updWallp.sh (Local-mode)
+![updWallp_h](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_h.png)
+
 Launch it manually
 
 > ./updWallp.sh -l /path/to/yourLocalImageFolder
+
+Output:
+![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_l.png)
 
 or via cron
 > */30 * * * * /path/to/updWallp/updWallp.sh -l /path/to/yourLocalImageFolder >/dev/null 2>&1
@@ -65,11 +68,19 @@ Launch it manually
 
 > ./updWallp.sh -r
 
+Output:
+![updWallp_r](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_r.png)
+
 or via cron
 > */30 * * * * /path/to/updWallp/updWallp.sh -r >/dev/null 2>&1
 
 
 ### updWallpShowOrg.sh
+![updWallpShowOrg_h](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallpShowOrg_h.png)
+
 Launch it manually
 
 > ./updWallpShowOrg.sh
+
+Output:
+![updWallpShowOrg](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallpShowOrg.png)
