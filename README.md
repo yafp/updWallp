@@ -33,7 +33,11 @@ The basic idea is inspired by Muzei and LinMuzei
 - notify-send (optional for desktop notifications)
 
 
-## Configuration
+## How to get started in a few steps
+### Get files
+Downloads the latest build from https://github.com/yafp/updWallp/archive/master.zip
+
+### Configuration
 As initial step you have to define the installation directory in the two major script **updWallp.sh** and **updWallpShowOrg.sh**. Please see the following example:
 
 From:
@@ -49,10 +53,11 @@ updWallpDir="/home/username/path/to/updWallpFolder"
 After that you can do the finetuning in *config.sh*.
 
 
-## Usage
-### updWallp.sh (Local-mode)
+### Usage
+#### updWallp.sh 
 ![updWallp_h](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_h.png)
 
+##### Local-mode
 Launch it manually
 
 > ./updWallp.sh -l /path/to/yourLocalImageFolder
@@ -64,7 +69,7 @@ Output:
 or via cron
 > */30 * * * * /path/to/updWallp/updWallp.sh -l /path/to/yourLocalImageFolder >/dev/null 2>&1
 
-### updWallp.sh (Remote-mode)
+##### Remote-mode
 Launch it manually
 
 > ./updWallp.sh -r
@@ -77,7 +82,7 @@ or via cron
 > */30 * * * * /path/to/updWallp/updWallp.sh -r >/dev/null 2>&1
 
 
-### updWallpShowOrg.sh
+#### updWallpShowOrg.sh
 ![updWallpShowOrg_h](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallpShowOrg_h.png)
 
 Launch it manually
