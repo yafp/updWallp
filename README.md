@@ -58,6 +58,7 @@ Launch it manually
 > ./updWallp.sh -l /path/to/yourLocalImageFolder
 
 Output:
+
 ![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_l.png)
 
 or via cron
@@ -69,6 +70,7 @@ Launch it manually
 > ./updWallp.sh -r
 
 Output:
+
 ![updWallp_r](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_r.png)
 
 or via cron
@@ -83,4 +85,5 @@ Launch it manually
 > ./updWallpShowOrg.sh
 
 Output:
+
 ![updWallpShowOrg](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallpShowOrg.png)
