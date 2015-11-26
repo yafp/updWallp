@@ -33,6 +33,23 @@ The basic idea is inspired by Muzei and LinMuzei
 - notify-send (optional for desktop notifications)
 
 
+## Configuration
+As initial step you have to define the installation directory in the two major script:
+* updWallp.sh
+* updWallpShowOrg.sh
+
+From:
+```bash
+updWallpDir=""
+```
+
+to something similar to this
+```bash
+updWallpDir="/home/username/path/to/updWallpFolder"
+```
+
+After that you can do the finetuning in *config.sh*.
+
 
 ## Usage
 ### updWallp.sh (Local-mode)
