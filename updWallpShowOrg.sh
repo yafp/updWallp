@@ -13,7 +13,7 @@
 # LOCAL CONFIG
 # ---------------------------------------------------------------------
 updWallpDir=""        # define the folder where you copied the updWallp folder to
-
+toggleTime=10s                                  # how long the original image is displayed if user manually toggles script: updWallpShowOrg.sh
 
 
 # #####################################################################
@@ -24,9 +24,10 @@ clear
 if [ -d "$updWallpDir" ]; # if updWallpDir is configured and valid
 	then
 	cd $updWallpDir
-	source config.sh		# load config
-	source functions.sh		# load functions
-	printf "${bold}${green}OK${normal} ... updWallp folder is set to: $updWallpDir\n"
+
+	source inc/loader.sh 	# load all inc files
+
+	printf "${bold}${green}OK${normal} ... updWallp folder is set to: ${underline}$updWallpDir${normal}\n"
 	startUp
 	if [ -z "$1" ];	# if user did not supply any paramter
 		then # do the normal script logic

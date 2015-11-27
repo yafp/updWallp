@@ -31,11 +31,9 @@ if [ -d "$updWallpDir" ]; # updWallp directory is set and valid
 	then
 	cd $updWallpDir # change to defined folder
 
-	source config.sh # load the config file
-	source functions.sh # load functions
+	source inc/loader.sh 		# source all needed files
 
 	startUp
-	printf "${bold}${green}OK${normal} ... updWallp folder is set to: $updWallpDir\n"
 
 	# Check if user supplied a parameter $1 to set a mode
 	#
@@ -45,60 +43,49 @@ if [ -d "$updWallpDir" ]; # updWallp directory is set and valid
 			exit
 	else # user supplied at least $1
 
-		# Parameter was: -h
-		if [ "$primaryParamter" = "-h" ]; # parameter was -h
+		if [ "$primaryParamter" = "-h" ] || [ "$primaryParamter" = "-l" ] || [ "$primaryParamter" = "-r" ] ; # valid parameters
 			then
-				printf "\n${bold}Usage:${normal}\n"
-				printf "  Help:         ./updWallp.sh -h\n"
-				printf "  Local-Mode:   ./updWallp.sh -l /path/to/local/image/folder\n"
-				printf "  Remote-Mode:  ./updWallp.sh -r\n\n"
-				printf "${bold}Documentation:${normal}\n"
-				printf "  https://github.com/yafp/updWallp/wiki\n"
-				exit
-		fi
 
-		# Parameter was: -l aka Local-Mode
-		if [ "$primaryParamter" = "-l" ]; # parameter was -h
-			then
-				checkOperatingSystem                         # check operating system
-				checkImageMagick                             # function to check if ImageMagick is installed
-				printf "${bold}${green}OK${normal} ... Local-mode\n"
-				checkImageSourceFolder
+			if [ "$primaryParamter" = "-h" ]; # parameter was -h
+				then
+					printf "\n${bold}Usage:${normal}\n"
+					printf "  Help:         ./updWallp.sh -h\n"
+					printf "  Local-Mode:   ./updWallp.sh -l /path/to/local/image/folder\n"
+					printf "  Remote-Mode:  ./updWallp.sh -r\n\n"
+					printf "${bold}Documentation:${normal}\n"
+					printf "  https://github.com/yafp/updWallp/wiki\n"
+					exit
+			fi
 
-				# Core work
-				generateNewWallpaper                         # generates a new wallpaper
-				setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
+			# for both: local and remote
+			checkOperatingSystem                         # check operating system
+			printf "${bold}${green}OK${normal} ... updWallp folder is set to: ${underline}$updWallpDir${normal}\n"
+			checkImageMagick                             # function to check if ImageMagick is installed
 
-				# Post work
-				cleanupUpdWallpDir                           # Cleaning up
-				exit
-		fi
+			if [ "$primaryParamter" = "-l" ]; # parameter was -l = local mode
+				then
+					printf "${bold}${green}OK${normal} ... Using local-mode (-l)\n"
+					checkImageSourceFolder
+			fi
 
+			if [ "$primaryParamter" = "-r" ]; # parameter was -r = remote mode
+				then
+					printf "${bold}${green}OK${normal} ... Using remote-mode (-r)\n"
+					checkRemoteRequirements
+					getRemoteMuzeiImage
+			fi
 
-		# Parameter was: -lr aka Remote-Mode
-		if [ "$primaryParamter" = "-r" ]; # parameter was -r
-			then
-				checkOperatingSystem                         # check operating system
-				checkImageMagick                             # function to check if ImageMagick is installed
-
-				printf "${bold}${green}OK${normal} ... Remote-mode (Muzei)\n"
-				checkRemoteRequirements
-				getRemoteMuzeiImage
-
-				# Core work
-				generateNewWallpaper                         # generates a new wallpaper
-				setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
-
-				# Post work
-				cleanupUpdWallpDir                           # Cleaning up
-				exit
-		else # wrong parameter
-			printf "${bold}${red}ERROR${normal} Invalid parameter '$primaryParamter'\n\nStart with: '-h' for some basic instructions.\n"
+			generateNewWallpaper                         # generates a new wallpaper
+			setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
+			cleanupUpdWallpDir                           # Cleaning up
 			exit
-		fi
 
+		else # parameter was not valid
+				printf "${bold}${red}ERROR${normal} Invalid parameter '$primaryParamter'\n\nStart with: '-h' for some basic instructions.\n"
+				exit
+		fi
 	fi
-else
+else # = updWallp directory is not set or not valid
 	printf "${bold}${red}ERROR${normal} updWallp folder not configured or not valid.\n"
 	exit                                                              # otherwise die
-fi
+fi # end of checking updWallp directory
