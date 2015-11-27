@@ -45,30 +45,6 @@ sepiaCommand="-sepia-tone 90%"
 
 
 # ---------------------------------------------------------------------
-# TEXT FORMATTING RELATED
-# ---------------------------------------------------------------------
-bold=$(tput bold)
-normal=$(tput sgr0)
-blink=$(tput blink)
-reverse=$(tput smso)
-underline=$(tput smul)
-
-# colors
-black=$(tput setaf 0)
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-lime_yellow=$(tput setaf 190)
-powder_blue=$(tput setaf 153)
-blue=$(tput setaf 4)
-magenta=$(tput setaf 5)
-cyan=$(tput setaf 6)
-white=$(tput setaf 7)
-bright=$(tput bold)
-
-
-
-# ---------------------------------------------------------------------
 # NOTIFICATION RELATED
 # ---------------------------------------------------------------------
 enableNotifications=false                             # true or false
@@ -77,23 +53,7 @@ notifyPath="/usr/bin/notify-send"                     # defines the path to noti
 
 
 # ---------------------------------------------------------------------
-# ./updWallpShowOrg.sh specific
-# ---------------------------------------------------------------------
-# Time value for updWallShowOrg.sh
-toggleTime=10s                                         # how long the original image is displayed if user manually toggles script: updWallpShowOrg.sh
-
-
-
-# ---------------------------------------------------------------------
 # FILENAMES for ImageCreation
 # ---------------------------------------------------------------------
 backupFilename="currentBaseWallpaper.png"             # filename for backup copy of selected file
 outputFilename="currentGeneratedWallpaper.png"        # generated Wallpaper which is set as wallpaper
-
-
-
-# ---------------------------------------------------------------------
-# DONT TOUCH
-# ---------------------------------------------------------------------
-# AppVersion
-appVersion=0.7.6
