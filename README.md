@@ -5,7 +5,7 @@
 
 ## About updWallp
 **updWallp** is a small bash based project which creates blured & dimmed wallpapers for your Linux desktops.
-It offers 2 operation modes - local and remote.
+It offers 2 operation modes.
 
 In **local-mode** *updWallp.sh* is using a random image from a user-supplied local folder to generate a blured & dimmed copy of it  and sets the new created image as wallpaper.
 
@@ -38,7 +38,7 @@ The basic idea is inspired by Muzei and LinMuzei
 Downloads the latest build from https://github.com/yafp/updWallp/archive/master.zip
 
 ### Configuration
-As initial step you have to define the installation directory in the two major script **updWallp.sh** and **updWallpShowOrg.sh**. 
+As initial step you have to define the installation directory in the two major script **updWallp.sh** and **updWallpShowOrg.sh**.
 
 Please see the following example:
 
@@ -56,7 +56,7 @@ After that you can do the finetuning in **config.sh**.
 
 
 ### Usage
-#### updWallp.sh 
+#### updWallp.sh (Mainscript)
 ##### General
 ![updWallp_h](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_h.png)
 
@@ -85,7 +85,7 @@ or via cron
 > */30 * * * * /path/to/updWallp/updWallp.sh -r >/dev/null 2>&1
 
 
-#### updWallpShowOrg.sh
+#### updWallpShowOrg.sh (Togglescript)
 ![updWallpShowOrg_h](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallpShowOrg_h.png)
 
 Launch it manually
