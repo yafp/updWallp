@@ -42,6 +42,7 @@ function checkOperatingSystem()
 function checkLinuxDesktopEnvironment()
 {
    desktopEnv=$DESKTOP_SESSION
+   # optional using: $XDG_CURRENT_DESKTOP
 
    # possible answers:
    #
@@ -51,30 +52,21 @@ function checkLinuxDesktopEnvironment()
 
    case  $desktopEnv  in
       "gnome")
-         # Is Supported - Nothing to do here
-         if [ "$(which gnome-session)" ]
+         # Check: is it gnome3?
+         if [ "$(pidof gnome-settings-daemon)" ]
             then
-            gnomeVersion="$(gnome-session --version)" # Get Gnome Version
-            printf "${bold}${green}OK${normal} ... Detected: ${gnomeVersion}\n"
-
-            # Gnome 3.x?
-            if [[ $gnomeVersion == *"gnome-session 3."* ]]
-               then
                printf "${bold}${green}OK${normal} ... Gnome 3 is supported\n"
-               return
-            fi
-
-            # Gnome 2.x?
-            if [[ $gnomeVersion == *"gnome-session 2."* ]]
-               then
-               printf "${bold}${green}OK${normal} ... Gnome 2 is supported\n"
-               return
-            fi
-
-            # if this code is reached - it seems to be gnome - but beither Gnome2 nor Gnome3 - Unexpected - exit
-            printf "${bold}${red}ERROR${normal} ... Unsupported Gnome Version. Aborting\n"
-            exit
+            return
          fi
+
+         if [ "$(which gconftool-2)" ]
+            then
+               printf "${bold}${green}OK${normal} ... Gnome 2 is supported\n"
+            return
+         fi
+
+         printf "${bold}${red}ERROR${normal} ... Unsupported Gnome Version. Aborting\n"
+         exit
          ;;
 
       *)
@@ -138,7 +130,7 @@ function checkRemoteRequirements()
 function displayNotification() {
    if [ "$enableNotifications" = true ]      # If notifications are enabled at all
       then
-      if [ -f $notifyPath ];    # if notify-send exists
+      if [ -f $notifyPath ]    # if notify-send exists
          then
          $notifyPath "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
       else
@@ -149,47 +141,33 @@ function displayNotification() {
 
 
 
-
 # ---------------------------------------------------------------------
 # SETLINUXWALLPAPER
 # ---------------------------------------------------------------------
 function setLinuxWallpaper() {
-   if [ "$(which gnome-session)" ]
+
+   # setting wallpaper on Gnome 3
+   if [ "$(pidof gnome-settings-daemon)" ]
       then
-      gnomeVersion="$(gnome-session --version)" # Get Gnome Version
+         /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
+         displayNotification "updWallp" "Wallpaper updated (using gsettings on Gnome 3)"
+         printf "${bold}${green}OK${normal} ... Wallpaper updated (using gsettings on Gnome 3)\n"
+         return
+   fi
 
-      # Gnome 3.x?
-      if [[ $gnomeVersion == *"gnome-session 3."* ]]
-         then
-         #printf "${bold}${green}OK${normal} ... Gnome 3\n"
-         if [ "$(pidof gnome-settings-daemon)" ];
-            then
-            /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
-            displayNotification "updWallp" "Wallpaper updated (using gsettings on Gnome 3)"
-            printf "${bold}${green}OK${normal} ... Wallpaper updated (using gsettings on Gnome 3)\n"
-            return
-         fi
-      fi
-
-      # Gnome 2.x?
-      if [[ $gnomeVersion == *"gnome-session 2."* ]]
-         then
+   # Setting wallpaper on Gnome 2
+   if [ "$(which gconftool-2)" ]
+      then
          gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $updWallpDir/$1
          displayNotification "updWallp" "Wallpaper updated (using gconftool on Gnome 2)"
          printf "${bold}${green}OK${normal} ... Wallpaper updated (using gconftool on Gnome 2)\n"
          return
-      fi
-
-      # if this code is reached - it seems to be gnome - but neither Gnome2 nor Gnome3 - Unexpected - exit
-      printf "${bold}${red}ERROR${normal} ... Unsupported Gnome Version. Aborting\n"
-      exit
-
-   else # its for sure not gnome which is used here
-      printf "${bold}${red}ERROR${normal} ... Sorry dude but your system is not supported.\n"
-      printf "${bold}${red}ERROR${normal} ... Currently only Gnome is supported (using: gsettings)\n"
-      printf "${bold}${red}ERROR${normal} ... More: ${underline}https://github.com/yafp/updWallp/wiki/Supported-Desktop-Environments${normal}. Aborting\n"
-      exit
    fi
+
+   printf "${bold}${red}ERROR${normal} ... Sorry dude but your system is not supported.\n"
+   printf "${bold}${red}ERROR${normal} ... Currently only Gnome is supported (using: gsettings)\n"
+   printf "${bold}${red}ERROR${normal} ... More: ${underline}https://github.com/yafp/updWallp/wiki/Supported-Desktop-Environments${normal}. Aborting\n"
+   exit
 }
 
 
@@ -200,7 +178,7 @@ function setLinuxWallpaper() {
 # Exit if the user submits a non-valid path
 # ---------------------------------------------------------------------
 function checkImageSourceFolder() {
-   if [ -d "$localUserImageFolder" ];                                                              # if image source folder exists
+   if [ -d "$localUserImageFolder" ]                                                             # if image source folder exists
       then
       printf "${bold}${green}OK${normal} ... Image source folder: ${underline}$localUserImageFolder${normal} is valid\n"       # can continue
       getNewRandomLocalFilePath                                                  # get a new local filepath
@@ -278,16 +256,16 @@ function generateNewWallpaper()
    if [ "$enableGrayscaleMode" = true ]      # Specialmode 1: if Grayscale is enabled in config
       then
       convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-      printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in $updWallpDir\n"
+      printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in ${underline}$updWallpDir${normal}\n"
       return
    elif [ "$enableSepiaMode" = true ]        # Specialmode 2: if Sepia is enabled in config
       then
       convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-      printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in $updWallpDir\n"
+      printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in ${underline}$updWallpDir${normal}\n"
       return
    else                                      # Normal mode
       convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-      printf "${bold}${green}OK${normal} ... Generated the new wallpaper in $updWallpDir\n"
+      printf "${bold}${green}OK${normal} ... Generated the new wallpaper in ${underline}$updWallpDir${normal}\n"
    fi
 }
 
@@ -308,5 +286,5 @@ function cleanupUpdWallpDir()
       #rm $muzeiFilename
    #fi
 
-   printf "${bold}${green}OK${normal} ... Finished cleaning up ${underline}$updWallpDir${normal}\n"
+   printf "${bold}${green}OK${normal} ... Finished cleaning up ${underline}$updWallpDir${normal}. Goodbye\n"
 }
