@@ -41,8 +41,11 @@ function checkOperatingSystem()
 # ---------------------------------------------------------------------
 function checkLinuxDesktopEnvironment()
 {
-   desktopEnv=$DESKTOP_SESSION
+   #desktopEnv=$DESKTOP_SESSION
+   ##desktopEnv=$XDG_CURRENT_DESKTOP
    # optional using: $XDG_CURRENT_DESKTOP
+
+   #printf "Detected Desktop: $desktopEnv\n\n"
 
    # possible answers:
    #
@@ -50,8 +53,8 @@ function checkLinuxDesktopEnvironment()
    # - xfce4      = xfce4
    # - KDE        = ?
 
-   case  $desktopEnv  in
-      "gnome")
+   ##case  $desktopEnv  in
+      ##"GNOME")
          # Check: is it gnome3?
          if [ "$(pidof gnome-settings-daemon)" ]
             then
@@ -65,16 +68,16 @@ function checkLinuxDesktopEnvironment()
             return
          fi
 
-         printf "${bold}${red}ERROR${normal} ... Unsupported Gnome Version. Aborting\n"
+         printf "${bold}${red}ERROR${normal} ... Unsupported desktop environment. Aborting\n"
          exit
-         ;;
+         ##;;
 
-      *)
-         printf "${bold}${red}ERROR${normal} ... Unsupported Desktop Envorinment detected ($desktopEnv).\n"
-         printf "${bold}${red}ERROR${normal} ... Currently only Gnome 2 & 3 are supported.\n"
-         printf "${bold}${red}ERROR${normal} ... More: ${underline}https://github.com/yafp/updWallp/wiki/Supported-Desktop-Environments${normal}. Aborting\n"
-         exit
-   esac
+      ##*)
+      ##   printf "${bold}${red}ERROR${normal} ... Unsupported Desktop Envorinment detected ($desktopEnv).\n"
+      ##   printf "${bold}${red}ERROR${normal} ... Currently only Gnome 2 & 3 are supported.\n"
+      ##   printf "${bold}${red}ERROR${normal} ... More: ${underline}https://github.com/yafp/updWallp/wiki/Supported-Desktop-Environments${normal}. Aborting\n"
+      ##   exit
+   ##esac
 }
 
 

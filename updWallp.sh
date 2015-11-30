@@ -27,7 +27,7 @@ localUserImageFolder=$2
 # SCRIPT-LOGIC
 # #####################################################################
 clear
-if [ -d "$updWallpDir" ]; # updWallp directory is set and valid
+if [ -d "$updWallpDir" ] # updWallp directory is set and valid
 	then
 	cd $updWallpDir # change to defined folder
 
@@ -37,16 +37,16 @@ if [ -d "$updWallpDir" ]; # updWallp directory is set and valid
 
 	# Check if user supplied a parameter $1 to set a mode
 	#
-	if [ -z "$primaryParamter" ]; # user did not supply $1
+	if [ -z "$primaryParamter" ] # user did not supply $1
 		then
 			printf "${bold}${red}ERROR${normal} ... you didnt supply any parameter. Try -h to get instructions\n"
 			exit
 	else # user supplied at least $1
 
-		if [ "$primaryParamter" = "-h" ] || [ "$primaryParamter" = "-l" ] || [ "$primaryParamter" = "-r" ] ; # valid parameters
+		if [ "$primaryParamter" = "-h" ] || [ "$primaryParamter" = "-l" ] || [ "$primaryParamter" = "-r" ] # valid parameters
 			then
 
-			if [ "$primaryParamter" = "-h" ]; # parameter was -h
+			if [ "$primaryParamter" = "-h" ] # parameter was -h
 				then
 					printf "\n${bold}Usage:${normal}\n"
 					printf "  Help:         ./updWallp.sh -h\n"
@@ -68,7 +68,7 @@ if [ -d "$updWallpDir" ]; # updWallp directory is set and valid
 					checkImageSourceFolder
 			fi
 
-			if [ "$primaryParamter" = "-r" ]; # parameter was -r = remote mode
+			if [ "$primaryParamter" = "-r" ] # parameter was -r = remote mode
 				then
 					printf "${bold}${green}OK${normal} ... Using remote-mode (-r)\n"
 					checkRemoteRequirements

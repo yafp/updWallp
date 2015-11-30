@@ -21,7 +21,7 @@ toggleTime=10s                                  # how long the original image is
 # #####################################################################
 clear
 
-if [ -d "$updWallpDir" ]; # if updWallpDir is configured and valid
+if [ -d "$updWallpDir" ] # if updWallpDir is configured and valid
 	then
 	cd $updWallpDir
 
@@ -36,8 +36,9 @@ if [ -d "$updWallpDir" ]; # if updWallpDir is configured and valid
 			printf "${bold}${green}OK${normal} ... Waiting for $toggleTime (seconds) until toggling back\n"
 			sleep "$toggleTime"
 			setLinuxWallpaper "$outputFilename"        # set the linux wallpaper back to the dimmed/blured version
+
 	else # user supplied a parameter
-		if [ "$1" = "-h" ]; # check if parameter is valid
+		if [ "$1" = "-h" ] # check if parameter is valid: -h = help/documentation
 			then
 				printf "${bold}Usage:${normal}\n"
 				printf "  ./updWallpShowOrg.sh\n\n"
@@ -49,5 +50,5 @@ if [ -d "$updWallpDir" ]; # if updWallpDir is configured and valid
 	fi
 else		# updWallpDir is not configured
 	printf "${bold}${red}ERROR${normal} Variable 'updWallpDir' is not not configured or not valid. Aborting\n"
-	exit                                                              # otherwise die
+	exit # die
 fi
