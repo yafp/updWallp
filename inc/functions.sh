@@ -23,11 +23,10 @@ function startUp()
 # ---------------------------------------------------------------------
 function checkOperatingSystem()
 {
-   if [[ $OSTYPE = *linux* ]] # we are on linux - so continue checking
-      then
+   # we are on linux - so continue checking
+   if [[ $OSTYPE = *linux* ]]; then
       printf "${bold}${green}OK${normal} ... Operating system: $OSTYPE\n"
       checkLinuxDesktopEnvironment # Check which desktop environment is in use
-
    else # not linux -> not supported
       printf "${bold}${red}ERROR${normal} ... Unexpected operating system: $OSTYPE Aborting\n"
       exit
@@ -56,14 +55,12 @@ function checkLinuxDesktopEnvironment()
    ##case  $desktopEnv  in
       ##"GNOME")
          # Check: is it gnome3?
-         if [ "$(pidof gnome-settings-daemon)" ]
-            then
+         if [ "$(pidof gnome-settings-daemon)" ]; then
                printf "${bold}${green}OK${normal} ... Gnome 3 is supported\n"
             return
          fi
 
-         if [ "$(which gconftool-2)" ]
-            then
+         if [ "$(which gconftool-2)" ]; then
                printf "${bold}${green}OK${normal} ... Gnome 2 is supported\n"
             return
          fi
@@ -86,8 +83,7 @@ function checkLinuxDesktopEnvironment()
 # Check if imagemagick is installed
 # ---------------------------------------------------------------------
 function checkImageMagick() {
-   if [ "$(which convert)" ]
-      then
+   if [ "$(which convert)" ]; then
       printf "${bold}${green}OK${normal} ... Found ImageMagick\n"
    else
       printf "${bold}${red}ERROR${normal} ... ImageMagick not found\n"
@@ -107,8 +103,7 @@ function checkImageMagick() {
 function checkRemoteRequirements()
 {
    # check for curl
-   if [ "$(which curl)" ]
-      then
+   if [ "$(which curl)" ]; then
       printf "${bold}${green}OK${normal} ... Found cURL (remote-mode)\n"
    else
       printf "${bold}${red}ERROR${normal} ... cURL not found (remote-mode). Aborting\n"
@@ -116,8 +111,7 @@ function checkRemoteRequirements()
    fi
 
    # check for jq
-   if [ "$(which jq)" ]
-      then
+   if [ "$(which jq)" ]; then
       printf "${bold}${green}OK${normal} ... Found JQ (remote-mode)\n"
    else
       printf "${bold}${red}ERROR${normal} ... JQ not found (remote-mode). Aborting\n"
@@ -131,14 +125,9 @@ function checkRemoteRequirements()
 # NOTIFICATION (enable or disable via config.sh)
 # ---------------------------------------------------------------------
 function displayNotification() {
-   if [ "$enableNotifications" = true ]      # If notifications are enabled at all
-      then
-      if [ -f $notifyPath ]    # if notify-send exists
-         then
-         $notifyPath "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
-      else
-         printf "${bold}${yellow}WARNING${normal} ... Unable to display a notification (notify-send not found)\n"
-      fi
+   # If notifications are enabled at all &  if notify-send exists
+   if [ "$enableNotifications" = true ] && [ -f $notifyPath ]; then
+      $notifyPath "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
    fi
 }
 
@@ -150,8 +139,7 @@ function displayNotification() {
 function setLinuxWallpaper() {
 
    # setting wallpaper on Gnome 3
-   if [ "$(pidof gnome-settings-daemon)" ]
-      then
+   if [ "$(pidof gnome-settings-daemon)" ]; then
          /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
          displayNotification "updWallp" "Wallpaper updated (using gsettings on Gnome 3)"
          printf "${bold}${green}OK${normal} ... Wallpaper updated (using gsettings on Gnome 3)\n"
@@ -159,8 +147,7 @@ function setLinuxWallpaper() {
    fi
 
    # Setting wallpaper on Gnome 2
-   if [ "$(which gconftool-2)" ]
-      then
+   if [ "$(which gconftool-2)" ]; then
          gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $updWallpDir/$1
          displayNotification "updWallp" "Wallpaper updated (using gconftool on Gnome 2)"
          printf "${bold}${green}OK${normal} ... Wallpaper updated (using gconftool on Gnome 2)\n"
@@ -181,8 +168,8 @@ function setLinuxWallpaper() {
 # Exit if the user submits a non-valid path
 # ---------------------------------------------------------------------
 function checkImageSourceFolder() {
-   if [ -d "$localUserImageFolder" ]                                                             # if image source folder exists
-      then
+   # if image source folder exists
+   if [ -d "$localUserImageFolder" ]; then
       printf "${bold}${green}OK${normal} ... Image source folder: ${underline}$localUserImageFolder${normal} is valid\n"       # can continue
       getNewRandomLocalFilePath                                                  # get a new local filepath
    else
@@ -198,18 +185,16 @@ function checkImageSourceFolder() {
 # ---------------------------------------------------------------------
 function getRemoteMuzeiImage()
 {
-   if ! [ -f ./muzeich.json ]
-      then
+   if ! [ -f ./muzeich.json ]; then
       curl -o muzeich.json 'https://muzeiapi.appspot.com/featured?cachebust=1'
       printf "${bold}${green}OK${normal} ... Downloaded muzei.json (initial).\n"
    else
       curl -o muzeich2.json 'https://muzeiapi.appspot.com/featured?cachebust=1'
       printf "${bold}${green}OK${normal} ... Downloaded muzei.json (checking for changes).\n"
-      if [ "$(cmp muzeich.json muzeich2.json)" ] # there is a new muzei image available
-         then
+      # there is a new muzei image available
+      if [ "$(cmp muzeich.json muzeich2.json)" ]; then
          mv muzeich2.json muzeich.json
          printf "${bold}${green}OK${normal} ... There is a new Muzei image available. Loading it.\n"
-
       else # muzei offers still the same image
          rm muzeich2.json # remove the second json file
          printf "${bold}${green}OK${normal} ... There is no new Muzei image available. Nothing to do here.\n"
@@ -256,8 +241,8 @@ function generateNewWallpaper()
 {
    convert "$newImage" $backupFilename                               # copy random base image to project folder
 
-   if [ "$enableGrayscaleMode" = true ]      # Specialmode 1: if Grayscale is enabled in config
-      then
+   # Specialmode 1: if Grayscale is enabled in config
+   if [ "$enableGrayscaleMode" = true ]; then
       convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
       printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in ${underline}$updWallpDir${normal}\n"
       return
@@ -279,8 +264,7 @@ function generateNewWallpaper()
 # ---------------------------------------------------------------------
 function cleanupUpdWallpDir()
 {
-   if [ -f "$imageFile" ]
-      then
+   if [ -f "$imageFile" ]; then
       rm $imageFile
    fi
 
