@@ -38,16 +38,14 @@ The basic idea is inspired by Muzei and LinMuzei
 Downloads the latest build from https://github.com/yafp/updWallp/archive/master.zip
 
 ### Configuration
-As initial step you have to define the installation directory in main configuration script **config.sh**.
-
-Please see the following example:
+As initial step you have to define the installation directory in the main configuration script **config.sh**.
 
 Change
 ```bash
 installationPath=""
 ```
 
-to something similar to this
+to something like this
 ```bash
 installationPath="/home/username/path/to/updWallpFolder"
 ```
