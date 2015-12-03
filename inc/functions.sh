@@ -127,7 +127,7 @@ function checkRemoteRequirements()
 function displayNotification() {
    # If notifications are enabled at all &  if notify-send exists
    if [ "$enableNotifications" = true ] && [ -f $notifyPath ]; then
-      $notifyPath "$1" "$2" -i "$updWallpDir/img/appIcon_128px.png"
+      $notifyPath "$1" "$2" -i "$installationPath/img/appIcon_128px.png"
    fi
 }
 
@@ -140,7 +140,7 @@ function setLinuxWallpaper() {
 
    # setting wallpaper on Gnome 3
    if [ "$(pidof gnome-settings-daemon)" ]; then
-         /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$updWallpDir/$1
+         /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$installationPath/$1
          displayNotification "updWallp" "Wallpaper updated (using gsettings on Gnome 3)"
          printf "${bold}${green}OK${normal} ... Wallpaper updated (using gsettings on Gnome 3)\n"
          return
@@ -148,7 +148,7 @@ function setLinuxWallpaper() {
 
    # Setting wallpaper on Gnome 2
    if [ "$(which gconftool-2)" ]; then
-         gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $updWallpDir/$1
+         gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $installationPath/$1
          displayNotification "updWallp" "Wallpaper updated (using gconftool on Gnome 2)"
          printf "${bold}${green}OK${normal} ... Wallpaper updated (using gconftool on Gnome 2)\n"
          return
@@ -203,16 +203,16 @@ function getRemoteMuzeiImage()
    fi
 
    # parse the Muzei JSON to extract the new image url
-   imageUri=`jq '.imageUri' $updWallpDir/muzeich.json | sed s/\"//g`
+   imageUri=`jq '.imageUri' $installationPath/muzeich.json | sed s/\"//g`
    imageFile=`basename $imageUri`
-   title=`jq '.title' $updWallpDir/muzeich.json | sed s/\"//g`
-   byline=`jq '.byline' $updWallpDir/muzeich.json | sed s/\"//g`
+   title=`jq '.title' $installationPath/muzeich.json | sed s/\"//g`
+   byline=`jq '.byline' $installationPath/muzeich.json | sed s/\"//g`
 
    echo "File $imageFile does not exist, downloading..."
    curl -O $imageUri
    convert $imageFile $muzeiFilename
 
-   newImage=$updWallpDir/$muzeiFilename
+   newImage=$installationPath/$muzeiFilename
    printf "${bold}${green}OK${normal} ... Finished getting latest Muzei image.\n"
 }
 
@@ -244,16 +244,16 @@ function generateNewWallpaper()
    # Specialmode 1: if Grayscale is enabled in config
    if [ "$enableGrayscaleMode" = true ]; then
       convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-      printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in ${underline}$updWallpDir${normal}\n"
+      printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in ${underline}$installationPath${normal}\n"
       return
    elif [ "$enableSepiaMode" = true ]        # Specialmode 2: if Sepia is enabled in config
       then
       convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-      printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in ${underline}$updWallpDir${normal}\n"
+      printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in ${underline}$installationPath${normal}\n"
       return
    else                                      # Normal mode
       convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-      printf "${bold}${green}OK${normal} ... Generated the new wallpaper in ${underline}$updWallpDir${normal}\n"
+      printf "${bold}${green}OK${normal} ... Generated the new wallpaper in ${underline}$installationPath${normal}\n"
    fi
 }
 
@@ -273,5 +273,5 @@ function cleanupUpdWallpDir()
       #rm $muzeiFilename
    #fi
 
-   printf "${bold}${green}OK${normal} ... Finished cleaning up ${underline}$updWallpDir${normal}. Goodbye\n"
+   printf "${bold}${green}OK${normal} ... Finished cleaning up ${underline}$installationPath${normal}. Goodbye\n"
 }
