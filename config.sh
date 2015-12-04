@@ -6,10 +6,28 @@
 #
 
 # ---------------------------------------------------------------------
-# CORE-CONFIGURATION
+# DECLARE VARIABLES
 # ---------------------------------------------------------------------
-# example: "/home/username/updWallp"
-installationPath=""
+#declare installationPath      # Type: string       Function: holds the installation-path of the project folder
+#declare blurCommand
+#declare dimCommand
+#declare enableGrayscaleMode   # Type: boolean
+#declare grayscaleCommand
+#declare enableSepiaMode       # Type: boolean
+#declare sepiaCommand
+#declare enableNotifications   # Type: boolean
+#declare notifyPath
+#declare backupFilename
+#declare outputFilename
+#declare primaryParameter
+
+
+
+# ---------------------------------------------------------------------
+# INSTALLATIONPATH
+#     example: $installationPath="/home/username/updWallp"
+# ---------------------------------------------------------------------
+installationPath="/media/mnt_raid1_2TB/WORK/DEV/GitHub/updWallp"
 
 
 # ---------------------------------------------------------------------
@@ -54,8 +72,5 @@ notifyPath="/usr/bin/notify-send"                     # defines the path to noti
 
 
 
-# ---------------------------------------------------------------------
-# FILENAMES for ImageCreation
-# ---------------------------------------------------------------------
-backupFilename="currentBaseWallpaper.png"             # filename for backup copy of selected file
-outputFilename="currentGeneratedWallpaper.png"        # generated Wallpaper which is set as wallpaper
+# undocumented
+primaryParameter=$1

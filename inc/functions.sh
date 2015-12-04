@@ -12,7 +12,7 @@
 # ---------------------------------------------------------------------
 function startUp()
 {
-   clear
+   #clear
    printf "${bold}*** updWallp (Version: $appVersion) ***${normal}\n\n"
 }
 
@@ -239,7 +239,8 @@ function getNewRandomLocalFilePath()
 # ---------------------------------------------------------------------
 function generateNewWallpaper()
 {
-   convert "$newImage" $backupFilename                               # copy random base image to project folder
+   #convert "$newImage" $backupFilename                               # copy random base image to project folder
+   cp "$newImage" $backupFilename                                      # copy random base image to project folder
 
    # Specialmode 1: if Grayscale is enabled in config
    if [ "$enableGrayscaleMode" = true ]; then

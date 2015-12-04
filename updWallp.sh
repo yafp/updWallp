@@ -14,8 +14,6 @@
 # ---------------------------------------------------------------------
 # LOCAL CONFIG - no need to touch
 # ---------------------------------------------------------------------
-muzeiFilename="muzeiImage.png"
-primaryParamter=$1
 localUserImageFolder=$2
 
 
@@ -23,35 +21,47 @@ localUserImageFolder=$2
 # #####################################################################
 # SCRIPT-LOGIC
 # #####################################################################
+clear
 currentPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ -f $currentPath/config.sh ]; then # found config file
 	source $currentPath/config.sh # load config file
+	source $currentPath/inc/loader.sh #source loader.sh which
 
-	# installationPath directory is set and valid
+	# check if installationPath directory is set and valid (in config.sh)
 	if [ -d "$installationPath" ]; then
 		cd $installationPath # change to defined folder
-		source inc/loader.sh 		# source all needed files
 		startUp
 
 		# Check if user supplied a parameter $1 to set a mode
-		if [ -z "$primaryParamter" ]; then
+		if [ -z "$primaryParameter" ]; then
 			# user did not supply $1
-			printf "${bold}${red}ERROR${normal} ... you didnt supply any parameter. Try -h to get instructions\n"
-			exit
+			#printf "${bold}${red}ERROR${normal} ... you didnt supply any parameter. Try -h to get instructions\n"
+			printf "$error03"
+			exit 3
 		else # user supplied at least $1
 
 			# valid parameters
-			if [ "$primaryParamter" = "-h" ] || [ "$primaryParamter" = "-l" ] || [ "$primaryParamter" = "-r" ]; then
+			if [ "$primaryParameter" = "-h" ] || [ "$primaryParameter" = "-l" ] || [ "$primaryParameter" = "-r" ] || [ "$primaryParameter" = "-v" ]; then
 
 				# parameter was -h
-				if [ "$primaryParamter" = "-h" ]; then
+				if [ "$primaryParameter" = "-h" ]; then
 						printf "\n${bold}Usage:${normal}\n"
 						printf "  Help:         ./updWallp.sh -h\n"
+						printf "  Version:      ./updWallp.sh -v\n"
 						printf "  Local-Mode:   ./updWallp.sh -l /path/to/local/image/folder\n"
 						printf "  Remote-Mode:  ./updWallp.sh -r\n\n"
 						printf "${bold}Documentation:${normal}\n"
-						printf "  https://github.com/yafp/updWallp/wiki\n"
-						exit
+						printf "  $appDocURL\n"
+						exit 0 # exit with success-message
+				fi
+
+				# parameter was -v
+				if [ "$primaryParameter" = "-v" ]; then
+						printf "\n${bold}Version:${normal}\n"
+						printf "  $appVersion\n\n"
+						printf "${bold}Documentation:${normal}\n"
+						printf "  $appDocURL\n"
+						exit 0 # exit with success-message
 				fi
 
 				# for both: local and remote
@@ -60,13 +70,13 @@ if [ -f $currentPath/config.sh ]; then # found config file
 				checkImageMagick                             # function to check if ImageMagick is installed
 
 				# parameter was -l = local mode
-				if [ "$primaryParamter" = "-l" ]; then
+				if [ "$primaryParameter" = "-l" ]; then
 					printf "${bold}${green}OK${normal} ... Using local-mode (-l)\n"
 					checkImageSourceFolder
 				fi
 
 				# parameter was -r = remote mode
-				if [ "$primaryParamter" = "-r" ]; then
+				if [ "$primaryParameter" = "-r" ]; then
 					printf "${bold}${green}OK${normal} ... Using remote-mode (-r)\n"
 					checkRemoteRequirements
 					getRemoteMuzeiImage
@@ -75,18 +85,19 @@ if [ -f $currentPath/config.sh ]; then # found config file
 				generateNewWallpaper                         # generates a new wallpaper
 				setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
 				cleanupUpdWallpDir                           # Cleaning up
-				exit
+				exit 0 													# exit with success-message
 
 			else # parameter was not valid
-					printf "${bold}${red}ERROR${normal} Invalid parameter '$primaryParamter'\n\nStart with: '-h' for some basic instructions.\n"
-					exit
+					printf "$error04"
+					exit 4
 			fi
 		fi
 	else # = updWallp directory is not set or not valid
-		printf "${bold}${red}ERROR${normal} Variable 'installationPath' is not configured (in config.sh) or not valid. Aborting\n"
-		exit                                                              # otherwise die
+		printf "$error02"
+		exit 2 # die
 	fi # end of checking updWallp directory
-else
-	printf "${bold}${red}ERROR${normal} Unable to find 'config.sh'. Aborting\n"
-	exit
+else # unable to load config.sh
+	printf "${bold}${red}ERROR${normal} Unable to find 'config.sh'. Exiting (errorcode 1)\n"
+	#printf "$error1"
+	exit 1
 fi

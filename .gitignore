@@ -1,3 +1,6 @@
+# FOLDERS
+tmp/**
+# FILES
 currentBaseWallpaper.png
 currentGeneratedWallpaper.png
 muzeich.json
