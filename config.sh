@@ -16,7 +16,7 @@
 # 0. INSTALLATIONPATH
 #     example: $installationPath="/home/username/updWallp"
 # ---------------------------------------------------------------------
-installationPath="/home/fidel/Apps/updWallp"
+installationPath=""
 
 
 
