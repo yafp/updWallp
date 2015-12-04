@@ -9,17 +9,7 @@
 # DECLARE VARIABLES
 # ---------------------------------------------------------------------
 #declare installationPath      # Type: string       Function: holds the installation-path of the project folder
-#declare blurCommand
-#declare dimCommand
-#declare enableGrayscaleMode   # Type: boolean
-#declare grayscaleCommand
-#declare enableSepiaMode       # Type: boolean
-#declare sepiaCommand
-#declare enableNotifications   # Type: boolean
-#declare notifyPath
-#declare backupFilename
-#declare outputFilename
-#declare primaryParameter
+
 
 
 
@@ -27,18 +17,26 @@
 # INSTALLATIONPATH
 #     example: $installationPath="/home/username/updWallp"
 # ---------------------------------------------------------------------
-installationPath="/media/mnt_raid1_2TB/WORK/DEV/GitHub/updWallp"
+installationPath=""
+
+
+
+# ---------------------------------------------------------------------
+# IMAGE-MODIFICATIONS-MODES
+#	0	= normal
+#	1	= grayscale
+#	2	= sepia
+# ---------------------------------------------------------------------
+imageModificationMode="1"
+
 
 
 # ---------------------------------------------------------------------
 # IMAGEMAGICK RELATED
 # ---------------------------------------------------------------------
-# Blur
-#
-#    -blur  {radius}x{sigma}
+# blur  {radius}x{sigma}
 # The important setting in the above is the second sigma value. It can be thought of as an approximation of just how much your want the image to 'spread' or blur,
 # in pixels. Think of it as the size of the brush used to blur the image. The numbers are floating point values, so you can use a very small value like '0.5'.
-#
 # The first value radius, is also important as it controls how big an area the operator should look at when spreading pixels.
 # This value should typically be either '0' or at a minimum double that of the sigma.
 #
@@ -53,14 +51,22 @@ blurCommand="-channel RGBA  -blur 0x16"
 dimCommand=""
 
 
-# Special-Mode: Grayscale
-enableGrayscaleMode=true                            # true or false. If true - images get converted to grayscale (black & white)
+
+# Mode 1: Grayscale
 grayscaleCommand="-type Grayscale"
-# or
-#
-# Special-Mode: Sepia
-enableSepiaMode=false                                 # true or false.
+
+# Mode 2: Sepia
 sepiaCommand="-sepia-tone 90%"
+
+
+
+
+
+# ---------------------------------------------------------------------
+# ADD-LABEL-TO-WALLPAPER
+# ---------------------------------------------------------------------
+addAppLabelOnGeneratedWallpaper=false 	# true or false
+
 
 
 

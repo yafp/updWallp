@@ -12,8 +12,7 @@
 # ---------------------------------------------------------------------
 function startUp()
 {
-   #clear
-   printf "${bold}*** updWallp (Version: $appVersion) ***${normal}\n\n"
+   printf "${bold}*** $appName ${normal}(Version: $appVersion) ${bold}***${normal}\n\n"
 }
 
 
@@ -40,6 +39,12 @@ function checkOperatingSystem()
 # ---------------------------------------------------------------------
 function checkLinuxDesktopEnvironment()
 {
+	# output display dimensions if possible
+	if [ "$(which xdpyinfo)" ]; then
+		displayResolution=$(xdpyinfo  | grep dimensions)
+		printf "${bold}${green}OK${normal} ... Display $displayResolution\n"
+	fi
+	
    #desktopEnv=$DESKTOP_SESSION
    ##desktopEnv=$XDG_CURRENT_DESKTOP
    # optional using: $XDG_CURRENT_DESKTOP
@@ -87,7 +92,7 @@ function checkImageMagick() {
       printf "${bold}${green}OK${normal} ... Found ImageMagick\n"
    else
       printf "${bold}${red}ERROR${normal} ... ImageMagick not found\n"
-      exit
+      exit 99
    fi
 }
 
@@ -107,7 +112,7 @@ function checkRemoteRequirements()
       printf "${bold}${green}OK${normal} ... Found cURL (remote-mode)\n"
    else
       printf "${bold}${red}ERROR${normal} ... cURL not found (remote-mode). Aborting\n"
-      exit
+      exit 99
    fi
 
    # check for jq
@@ -115,7 +120,7 @@ function checkRemoteRequirements()
       printf "${bold}${green}OK${normal} ... Found JQ (remote-mode)\n"
    else
       printf "${bold}${red}ERROR${normal} ... JQ not found (remote-mode). Aborting\n"
-      exit
+      exit 99
    fi
 }
 
@@ -141,7 +146,7 @@ function setLinuxWallpaper() {
    # setting wallpaper on Gnome 3
    if [ "$(pidof gnome-settings-daemon)" ]; then
          /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$installationPath/$1
-         displayNotification "updWallp" "Wallpaper updated (using gsettings on Gnome 3)"
+         displayNotification "$appName" "Wallpaper updated (using gsettings on Gnome 3)"
          printf "${bold}${green}OK${normal} ... Wallpaper updated (using gsettings on Gnome 3)\n"
          return
    fi
@@ -149,7 +154,7 @@ function setLinuxWallpaper() {
    # Setting wallpaper on Gnome 2
    if [ "$(which gconftool-2)" ]; then
          gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $installationPath/$1
-         displayNotification "updWallp" "Wallpaper updated (using gconftool on Gnome 2)"
+         displayNotification "$appName" "Wallpaper updated (using gconftool on Gnome 2)"
          printf "${bold}${green}OK${normal} ... Wallpaper updated (using gconftool on Gnome 2)\n"
          return
    fi
@@ -239,23 +244,37 @@ function getNewRandomLocalFilePath()
 # ---------------------------------------------------------------------
 function generateNewWallpaper()
 {
-   #convert "$newImage" $backupFilename                               # copy random base image to project folder
-   cp "$newImage" $backupFilename                                      # copy random base image to project folder
+   convert "$newImage" $backupFilename                               # copy random base image to project folder (using convert to ensure its always a png)
 
-   # Specialmode 1: if Grayscale is enabled in config
-   if [ "$enableGrayscaleMode" = true ]; then
-      convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-      printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in ${underline}$installationPath${normal}\n"
-      return
-   elif [ "$enableSepiaMode" = true ]        # Specialmode 2: if Sepia is enabled in config
-      then
-      convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-      printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in ${underline}$installationPath${normal}\n"
-      return
-   else                                      # Normal mode
-      convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-      printf "${bold}${green}OK${normal} ... Generated the new wallpaper in ${underline}$installationPath${normal}\n"
-   fi
+	#$imageModificationMode
+	if [ -z "$imageModificationMode" ]; then
+		printf "${bold}${red}ERROR${normal} ... Image modification mode is not set, Please check ${underline}config.sh${normal}. Aborting\n"
+		exit 99
+	else # mode is set - now check if its valid
+		case "$imageModificationMode" in
+			0)  convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+				printf "${bold}${green}OK${normal} ... Generated the new plain wallpaper in ${underline}$installationPath${normal}\n"
+    			;;
+			1)  convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+				printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in ${underline}$installationPath${normal}\n"
+				
+				# Label command
+				if [ "$addAppLabelOnGeneratedWallpaper" = true ] ; then
+					composite -geometry  +0+700 "img/appLabel.png" $outputFilename $outputFilename
+					printf "${bold}${green}OK${normal} ... Added an app-label\n"
+				fi
+			
+				
+				
+    			;;
+			2)  convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+				printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in ${underline}$installationPath${normal}\n"
+    			;;
+			*) 	printf "${bold}${red}ERROR${normal} ... Image modification mode is set to ${underline}$imageModificationMode${normal} which isnt correct. Aborting\n"
+				exit 99
+   				;;
+		esac
+	fi
 }
 
 
