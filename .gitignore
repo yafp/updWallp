@@ -1,7 +1,5 @@
-# FOLDERS
-tmp/**
 # FILES
-currentBaseWallpaper.png
-currentGeneratedWallpaper.png
+tmp/currentBaseWallpaper.png
+tmp/currentGeneratedWallpaper.png
+tmp/muzeiImage.png
 muzeich.json
-muzeiImage.png
