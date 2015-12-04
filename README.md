@@ -55,9 +55,6 @@ After that you can continue messing around with the other parameters in **config
 
 ### Usage
 #### updWallp.sh (Mainscript)
-##### General
-![updWallp_h](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_h.png)
-
 ##### Local-mode
 Launch it manually
 
@@ -84,8 +81,6 @@ or via cron
 
 
 #### updWallpShowOrg.sh (Togglescript)
-![updWallpShowOrg_h](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallpShowOrg_h.png)
-
 Launch it manually
 
 > ./updWallpShowOrg.sh
