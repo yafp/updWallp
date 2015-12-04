@@ -27,8 +27,8 @@ function checkOperatingSystem()
       printf "${bold}${green}OK${normal} ... Operating system: $OSTYPE\n"
       checkLinuxDesktopEnvironment # Check which desktop environment is in use
    else # not linux -> not supported
-      printf "${bold}${red}ERROR${normal} ... Unexpected operating system: $OSTYPE Aborting\n"
-      exit
+      printf "${bold}${red}ERROR${normal} ... Unexpected operating system: $OSTYPE. Exiting (errorcode 99).\n"
+      exit 99
    fi
 }
 
@@ -44,7 +44,7 @@ function checkLinuxDesktopEnvironment()
 		displayResolution=$(xdpyinfo  | grep dimensions)
 		printf "${bold}${green}OK${normal} ... Display $displayResolution\n"
 	fi
-	
+
    #desktopEnv=$DESKTOP_SESSION
    ##desktopEnv=$XDG_CURRENT_DESKTOP
    # optional using: $XDG_CURRENT_DESKTOP
@@ -61,17 +61,17 @@ function checkLinuxDesktopEnvironment()
       ##"GNOME")
          # Check: is it gnome3?
          if [ "$(pidof gnome-settings-daemon)" ]; then
-               printf "${bold}${green}OK${normal} ... Gnome 3 is supported\n"
+            printf "${bold}${green}OK${normal} ... Detected Gnome 3 (supported)\n"
             return
          fi
 
          if [ "$(which gconftool-2)" ]; then
-               printf "${bold}${green}OK${normal} ... Gnome 2 is supported\n"
+            printf "${bold}${green}OK${normal} ... Detected Gnome 2 (supported)\n"
             return
          fi
 
-         printf "${bold}${red}ERROR${normal} ... Unsupported desktop environment. Aborting\n"
-         exit
+         printf "${bold}${red}ERROR${normal} ... Unsupported desktop environment. Exiting (errorcode 99).\n"
+         exit 99
          ##;;
 
       ##*)
@@ -89,9 +89,9 @@ function checkLinuxDesktopEnvironment()
 # ---------------------------------------------------------------------
 function checkImageMagick() {
    if [ "$(which convert)" ]; then
-      printf "${bold}${green}OK${normal} ... Found ImageMagick\n"
+      printf "${bold}${green}OK${normal} ... Found ImageMagick (required)\n"
    else
-      printf "${bold}${red}ERROR${normal} ... ImageMagick not found\n"
+      printf "${bold}${red}ERROR${normal} ... ImageMagick not found. Exiting (errorcode 99).\n"
       exit 99
    fi
 }
@@ -109,17 +109,17 @@ function checkRemoteRequirements()
 {
    # check for curl
    if [ "$(which curl)" ]; then
-      printf "${bold}${green}OK${normal} ... Found cURL (remote-mode)\n"
+      printf "${bold}${green}OK${normal} ... Found cURL (required for remote-mode)\n"
    else
-      printf "${bold}${red}ERROR${normal} ... cURL not found (remote-mode). Aborting\n"
+      printf "${bold}${red}ERROR${normal} ... cURL not found (required for remote-mode). Exiting (errorcode 99).\n"
       exit 99
    fi
 
    # check for jq
    if [ "$(which jq)" ]; then
-      printf "${bold}${green}OK${normal} ... Found JQ (remote-mode)\n"
+      printf "${bold}${green}OK${normal} ... Found JQ (required for remote-mode)\n"
    else
-      printf "${bold}${red}ERROR${normal} ... JQ not found (remote-mode). Aborting\n"
+      printf "${bold}${red}ERROR${normal} ... JQ not found (required for remote-mode). Exiting (errorcode 99).\n"
       exit 99
    fi
 }
@@ -145,24 +145,24 @@ function setLinuxWallpaper() {
 
    # setting wallpaper on Gnome 3
    if [ "$(pidof gnome-settings-daemon)" ]; then
-         /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$installationPath/$1
-         displayNotification "$appName" "Wallpaper updated (using gsettings on Gnome 3)"
-         printf "${bold}${green}OK${normal} ... Wallpaper updated (using gsettings on Gnome 3)\n"
-         return
+      /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$installationPath/$1
+      displayNotification "$appName" "Wallpaper updated (using gsettings on Gnome 3)"
+      printf "${bold}${green}OK${normal} ... Wallpaper updated (using gsettings on Gnome 3)\n"
+      return
    fi
 
    # Setting wallpaper on Gnome 2
    if [ "$(which gconftool-2)" ]; then
-         gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $installationPath/$1
-         displayNotification "$appName" "Wallpaper updated (using gconftool on Gnome 2)"
-         printf "${bold}${green}OK${normal} ... Wallpaper updated (using gconftool on Gnome 2)\n"
-         return
+      gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $installationPath/$1
+      displayNotification "$appName" "Wallpaper updated (using gconftool on Gnome 2)"
+      printf "${bold}${green}OK${normal} ... Wallpaper updated (using gconftool on Gnome 2)\n"
+      return
    fi
 
    printf "${bold}${red}ERROR${normal} ... Sorry dude but your system is not supported.\n"
-   printf "${bold}${red}ERROR${normal} ... Currently only Gnome is supported (using: gsettings)\n"
-   printf "${bold}${red}ERROR${normal} ... More: ${underline}https://github.com/yafp/updWallp/wiki/Supported-Desktop-Environments${normal}. Aborting\n"
-   exit
+   printf "${bold}${red}ERROR${normal} ... Currently only Gnome is supported (using: gsettings and/or gconftool-2)\n"
+   printf "${bold}${red}ERROR${normal} ... More: ${underline}$appDocURL/Supported-Desktop-Environments${normal}. Exiting (errorcode 99).\n"
+   exit 99
 }
 
 
@@ -178,8 +178,8 @@ function checkImageSourceFolder() {
       printf "${bold}${green}OK${normal} ... Image source folder: ${underline}$localUserImageFolder${normal} is valid\n"       # can continue
       getNewRandomLocalFilePath                                                  # get a new local filepath
    else
-      printf "${bold}${red}ERROR${normal} ... Local mode but image source dir ${underline}$localUserImageFolder${normal} isnt a valid directory. Aborting\n"      # can continue
-      exit
+      printf "${bold}${red}ERROR${normal} ... Local mode but image source dir ${underline}$localUserImageFolder${normal} isnt a valid directory. Exiting (errorcode 99).\n"      # can continue
+      exit 99
    fi
 }
 
@@ -232,7 +232,7 @@ function getRemoteMuzeiImage()
 function getNewRandomLocalFilePath()
 {
    newImage=$(find $localUserImageFolder -type f | shuf -n 1)             # pick random image from source folder
-   printf "${bold}${green}OK${normal} ... Random local image choosen\n"
+   printf "${bold}${green}OK${normal} ... Random image: ${underline}$newImage${normal}\n"
 }
 
 
@@ -252,28 +252,32 @@ function generateNewWallpaper()
 		exit 99
 	else # mode is set - now check if its valid
 		case "$imageModificationMode" in
+
+         # 0 = normal-mode
 			0)  convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
 				printf "${bold}${green}OK${normal} ... Generated the new plain wallpaper in ${underline}$installationPath${normal}\n"
     			;;
+
+         # 1 = grayscale
 			1)  convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
 				printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in ${underline}$installationPath${normal}\n"
-				
-				# Label command
-				if [ "$addAppLabelOnGeneratedWallpaper" = true ] ; then
-					composite -geometry  +0+700 "img/appLabel.png" $outputFilename $outputFilename
-					printf "${bold}${green}OK${normal} ... Added an app-label\n"
-				fi
-			
-				
-				
-    			;;
-			2)  convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+            ;;
+
+         # 2 = sepia-mode
+			2) convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
 				printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in ${underline}$installationPath${normal}\n"
     			;;
-			*) 	printf "${bold}${red}ERROR${normal} ... Image modification mode is set to ${underline}$imageModificationMode${normal} which isnt correct. Aborting\n"
+
+			*) printf "${bold}${red}ERROR${normal} ... Image modification mode is set to ${underline}$imageModificationMode${normal} which isnt correct. Aborting\n"
 				exit 99
-   				;;
+   			;;
 		esac
+
+      # Add Label if configured (testing)
+      if [ "$addAppLabelOnGeneratedWallpaper" = true ] ; then
+         composite -geometry  +0+700 "img/appLabel.png" $outputFilename $outputFilename
+         printf "${bold}${green}OK${normal} ... Added app-label\n"
+      fi
 	fi
 }
 

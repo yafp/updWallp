@@ -46,7 +46,7 @@ if [ -f $currentPath/config.sh ]; then # found config file
 				printf "  $appDocURL\n"
 				exit 0 # exit with success
 
-         elif [ "$primaryParameter" = "-v" ]; then
+         elif [ "$primaryParameter" = "-v" ] || [ "$primaryParameter" = "--version" ] ; then
             printf "\n${bold}Version:${normal}\n"
             printf "  $appVersion\n\n"
             printf "${bold}Documentation:${normal}\n"

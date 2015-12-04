@@ -3,9 +3,10 @@
 #  Name:       updWallp.sh
 #  Function:   Script to pick a random image from a folder, generate a dimmed & blured version of it and set it as wallpaper
 #  Usage:
+#					help:						./updWallp.sh -h
+#					version:					./updWallp.sh -v
 #					local mode: 			./updWallp.sh -l /path/to/yourImageSourceFolder
 #					remote mode: 			./updWallp.sh -r
-#					help:						./updWallp.sh -h
 #
 #  Github:     https://github.com/yafp/updWallp
 #
@@ -35,28 +36,27 @@ if [ -f $currentPath/config.sh ]; then # found config file
 		# Check if user supplied a parameter $1 to set a mode
 		if [ -z "$primaryParameter" ]; then
 			# user did not supply $1
-			#printf "${bold}${red}ERROR${normal} ... you didnt supply any parameter. Try -h to get instructions\n"
 			printf "$error03"
 			exit 3
 		else # user supplied at least $1
 
 			# valid parameters
-			if [ "$primaryParameter" = "-h" ] || [ "$primaryParameter" = "-l" ] || [ "$primaryParameter" = "-r" ] || [ "$primaryParameter" = "-v" ]; then
+			if [ "$primaryParameter" = "-h" ] || [ "$primaryParameter" = "-l" ] || [ "$primaryParameter" = "-r" ] || [ "$primaryParameter" = "-v" ] || [ "$primaryParameter" = "--version" ]; then
 
 				# parameter was -h
 				if [ "$primaryParameter" = "-h" ]; then
 						printf "\n${bold}Usage:${normal}\n"
 						printf "  Help:         ./updWallp.sh -h\n"
 						printf "  Version:      ./updWallp.sh -v\n"
-						printf "  Local-Mode:   ./updWallp.sh -l /path/to/local/image/folder\n"
-						printf "  Remote-Mode:  ./updWallp.sh -r\n\n"
+						printf "  Local-mode:   ./updWallp.sh -l /path/to/local/image/folder\n"
+						printf "  Remote-mode:  ./updWallp.sh -r\n\n"
 						printf "${bold}Documentation:${normal}\n"
 						printf "  $appDocURL\n"
 						exit 0 # exit with success-message
 				fi
 
-				# parameter was -v
-				if [ "$primaryParameter" = "-v" ]; then
+				# parameter was -v or --version
+				if [ "$primaryParameter" = "-v" ] || [ "$primaryParameter" = "--version" ]; then
 						printf "\n${bold}Version:${normal}\n"
 						printf "  $appVersion\n\n"
 						printf "${bold}Documentation:${normal}\n"
@@ -66,7 +66,7 @@ if [ -f $currentPath/config.sh ]; then # found config file
 
 				# for both: local and remote
 				checkOperatingSystem                         # check operating system
-				printf "${bold}${green}OK${normal} ... updWallp folder is set to: ${underline}$installationPath${normal}\n"
+				printf "${bold}${green}OK${normal} ... Installation folder is set to: ${underline}$installationPath${normal}\n"
 				checkImageMagick                             # function to check if ImageMagick is installed
 
 				# parameter was -l = local mode
