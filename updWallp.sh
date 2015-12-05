@@ -26,11 +26,11 @@ clear
 currentPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ -f $currentPath/config.sh ]; then # found config file
 	source $currentPath/config.sh # load config file
-	source $currentPath/inc/loader.sh #source loader.sh which
 
 	# check if installationPath directory is set and valid (in config.sh)
 	if [ -d "$installationPath" ]; then
 		cd $installationPath # change to defined folder
+		source inc/loader.sh # source loader.sh
 		startUp
 
 		# Check if user supplied a parameter $1 to set a mode
