@@ -139,36 +139,6 @@ function displayNotification() {
 
 
 # ---------------------------------------------------------------------
-# SETLINUXWALLPAPER
-# ---------------------------------------------------------------------
-function setLinuxWallpaper() {
-
-   # setting wallpaper on Gnome 3
-   if [ "$(pidof gnome-settings-daemon)" ]; then
-      /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$installationPath/$1
-      displayNotification "$appName" "Wallpaper updated (using gsettings on Gnome 3)"
-      printf "${bold}${green}OK${normal} ... Wallpaper updated (using gsettings on Gnome 3)\n"
-      return
-   fi
-
-   # Setting wallpaper on Gnome 2
-   if [ "$(which gconftool-2)" ]; then
-      gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $installationPath/$1
-      displayNotification "$appName" "Wallpaper updated (using gconftool on Gnome 2)"
-      printf "${bold}${green}OK${normal} ... Wallpaper updated (using gconftool on Gnome 2)\n"
-      return
-   fi
-
-   printf "${bold}${red}ERROR${normal} ... Sorry dude but your system is not supported.\n"
-   printf "${bold}${red}ERROR${normal} ... Currently only Gnome is supported (using: gsettings and/or gconftool-2)\n"
-   printf "${bold}${red}ERROR${normal} ... More: ${underline}$appDocURL/Supported-Desktop-Environments${normal}. Exiting (errorcode 99).\n"
-   exit 99
-}
-
-
-
-
-# ---------------------------------------------------------------------
 # check if the path to the local image folder is valid
 # Exit if the user submits a non-valid path
 # ---------------------------------------------------------------------
@@ -245,6 +215,8 @@ function getNewRandomLocalFilePath()
 function generateNewWallpaper()
 {
    convert "$newImage" $backupFilename                               # copy random base image to project folder (using convert to ensure its always a png)
+   printf "${bold}${green}OK${normal} ... Finished mirroring source image to ${underline}$installationPath/$backupFilename${normal}\n"
+
 
 	#$imageModificationMode
 	if [ -z "$imageModificationMode" ]; then
@@ -254,32 +226,77 @@ function generateNewWallpaper()
 		case "$imageModificationMode" in
 
          # 0 = normal-mode
-			0)  convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-				printf "${bold}${green}OK${normal} ... Generated the new plain wallpaper in ${underline}$installationPath${normal}\n"
+			0) convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+				printf "${bold}${green}OK${normal} ... Generated the new plain wallpaper in ${underline}$installationPath/tmp${normal}\n"
     			;;
 
          # 1 = grayscale
-			1)  convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-				printf "${bold}${green}OK${normal} ... Generated the new grayscale wallpaper in ${underline}$installationPath${normal}\n"
+			1) convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+   		   printf "${bold}${green}OK${normal} ... Generated the new grayscaled wallpaper in ${underline}$installationPath/tmp${normal}\n"
             ;;
 
          # 2 = sepia-mode
 			2) convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-				printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in ${underline}$installationPath${normal}\n"
+				printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in ${underline}$installationPath/tmp${normal}\n"
     			;;
+
+         # 3 = colorize
+   		3) convert "$newImage" $blurCommand $dimCommand $colorizeCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+   			printf "${bold}${green}OK${normal} ... Generated the new colorized wallpaper in ${underline}$installationPath/tmp${normal}\n"
+       		;;
 
 			*) printf "${bold}${red}ERROR${normal} ... Image modification mode is set to ${underline}$imageModificationMode${normal} which isnt correct. Aborting\n"
 				exit 99
    			;;
 		esac
 
+      # scale image to user-defined with if configured in config.sh
+      if [ "$enableScaleToWidth" = true ]; then
+         convert $outputFilename -thumbnail $imageWidth $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
+         printf "${bold}${green}OK${normal} ... Scaled image to defined width of ${underline}$imageWidth${normal} pixel.\n"
+      fi
+
       # Add Label if configured (testing)
       if [ "$addAppLabelOnGeneratedWallpaper" = true ] ; then
-         composite -geometry  +0+700 "img/appLabel.png" $outputFilename $outputFilename
-         printf "${bold}${green}OK${normal} ... Added app-label\n"
+         #imageDimensions=$(identify -size geometry)
+         #printf "$imageDimensions\n"
+         composite -geometry  +0+1200 "img/appLabel_150x40px.png" $outputFilename $outputFilename
+         printf "${bold}${green}OK${normal} ... Added app-label to ${underline}$installationPath/$outputFilename${normal}\n"
       fi
+
+      return
 	fi
 }
+
+
+
+# ---------------------------------------------------------------------
+# SETLINUXWALLPAPER
+# ---------------------------------------------------------------------
+function setLinuxWallpaper() {
+
+   # setting wallpaper on Gnome 3
+   if [ "$(pidof gnome-settings-daemon)" ]; then
+      /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$installationPath/$1
+      displayNotification "$appName" "Wallpaper updated (using gsettings on Gnome 3)"
+      printf "${bold}${green}OK${normal} ... Wallpaper updated (using gsettings on Gnome 3)\n"
+      return
+   fi
+
+   # Setting wallpaper on Gnome 2
+   if [ "$(which gconftool-2)" ]; then
+      gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $installationPath/$1
+      displayNotification "$appName" "Wallpaper updated (using gconftool on Gnome 2)"
+      printf "${bold}${green}OK${normal} ... Wallpaper updated (using gconftool on Gnome 2)\n"
+      return
+   fi
+
+   printf "${bold}${red}ERROR${normal} ... Sorry but your system is not supported.\n"
+   printf "${bold}${red}ERROR${normal} ... Currently only Gnome is supported (using: gsettings and/or gconftool-2)\n"
+   printf "${bold}${red}ERROR${normal} ... More: ${underline}$appDocURL/Supported-Desktop-Environments${normal}. Exiting (errorcode 99).\n"
+   exit 99
+}
+
 
 
 
