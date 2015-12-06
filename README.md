@@ -4,7 +4,7 @@
 
 
 ## About
-**updWallp** is a small bash based project which creates non-distracting (blured/dimmed and some other stuff) wallpapers for your linux computer out of your images/photos.
+**updWallp** is a small bash based project which creates nondistracting (blured/dimmed and some other stuff) wallpapers for your linux computer out of your images/photos.
 
 The basic idea is inspired by [Muzei](https://github.com/romannurik/muzei/) and [LinMuzei](https://github.com/aepirli/linmuzei).
 
@@ -19,20 +19,20 @@ In **local-mode** *updWallp.sh* is using a random image from a user-supplied loc
 In **remote-mode** (aka *Muzei* mode) it picks the muzei-picture-of-the-day from the internet, generates a blured & dimmed version of it and sets the new created image as wallpaper.
 
 The image-modification relies on ImageMagick and is user-adjustable.
-Out of the box all output images of **updWallp** are blured and dimmed, in addition they might be grayscaled or sepia. They might be scaled to a user-defined width as well.
+Out of the box all output images of **updWallp** are blured and dimmed, in addition they might be grayscaled or sepia or colorized differently. They might be scaled to a user-defined width as well.
 
 If you feel comfortable hacking the script you can go crazy and add tons of other parameters ImageMagick offers.
 
-A second bash script (*updWallpShowOrg.sh*) offers the option to temporary toggle back to the original (non-blured & dimmed) version of the current wallpaper for x seconds.
+A second bash script (*updWallpShowOrg.sh*) offers the option to temporary toggle the wallpaper back to the original (non-blured & dimmed) version of the current wallpaper for x seconds.
 
 
 
 ## Requirements
-- ImageMagick (needed)
+- ImageMagick (needed in general)
 
-- cURL (needed in Remote mode to download images)
+- cURL (needed in remote-mode to download images)
 
-- jq (needed in Remote mode to parse the muzei.json)
+- jq (needed in remote-mode to parse the muzei.json)
 
 - notify-send (optional for desktop notifications)
 
@@ -59,7 +59,7 @@ installationPath="/home/username/path/to/updWallpFolder"
 ### Usage
 #### updWallp.sh (Mainscript)
 ##### Local-mode
-Launch it manually
+Execute:
 
 > ./updWallp.sh -l /path/to/yourLocalImageFolder
 
@@ -71,7 +71,7 @@ or via cron
 > */30 * * * * /path/to/updWallp/updWallp.sh -l /path/to/yourLocalImageFolder >/dev/null 2>&1
 
 ##### Remote-mode
-Launch it manually
+Execute:
 
 > ./updWallp.sh -r
 
@@ -84,7 +84,7 @@ or via cron
 
 
 #### updWallpShowOrg.sh (Togglescript)
-Launch it manually
+Execute:
 
 > ./updWallpShowOrg.sh
 

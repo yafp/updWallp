@@ -16,7 +16,7 @@
 # 1. INSTALLATIONPATH (mission-critical)
 #     example: $installationPath="/home/username/updWallp"
 # ---------------------------------------------------------------------
-installationPath=""
+installationPath="/home/fidel/Apps/updWallp"
 
 
 
@@ -52,7 +52,7 @@ blurCommand="-channel RGBA  -blur 0x16"
 #
 # Example:  -brightness-contrast -30x10
 #               where -30 is to darken by 30 and +10 is to increase the contrast by 10.
-dimCommand="-brightness-contrast -30x10"
+dimCommand="-brightness-contrast -10x5"
 
 
 
@@ -62,16 +62,27 @@ dimCommand="-brightness-contrast -30x10"
 #	1	= grayscale
 #	2	= sepia
 #  3  = colorize
+#  4  = level-colors
 # ---------------------------------------------------------------------
 imageModificationMode="1"                       # must be set
 #
 grayscaleCommand="-type Grayscale"              # Grayscale command
 sepiaCommand="-sepia-tone 90%"                  # Sepia command
-colorizeCommand="+level-colors Navy,DarkGreen"  # colorize:
+colorizeCommand="-fill white -colorize 50%"     # colorize
+levelColorsCommand="+level-colors Navy,DarkGreen"  # colorize:
+
                                                 #     example:
                                                 #        Navy,
                                                 #       or:
                                                 #        Navy, DarkGreen
+
+# other ideas:                                  http://www.imagemagick.org/Usage/color_mods/
+#
+#  Sigmoidal Non-linearity Contrast
+#     cmd="-sigmoidal-contrast 10,50%"  # colorize:
+#
+# Tinting:
+#     cmd="-fill white -colorize 50%"
 
 
 
@@ -80,8 +91,7 @@ colorizeCommand="+level-colors Navy,DarkGreen"  # colorize:
 #     if enabled updWallp scales the created image down to the user-defined with
 # ---------------------------------------------------------------------
 enableScaleToWidth=true
-imageWidth="1920" # px
-backgroundColor="black"
+imageWidth="1920" # px width for output
 
 
 

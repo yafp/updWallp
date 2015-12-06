@@ -24,10 +24,10 @@ function checkOperatingSystem()
 {
    # we are on linux - so continue checking
    if [[ $OSTYPE = *linux* ]]; then
-      printf "${bold}${green}OK${normal} ... Operating system: $OSTYPE\n"
+      printf "${bold}${green}OK${normal}\tOperating system: $OSTYPE\n"
       checkLinuxDesktopEnvironment # Check which desktop environment is in use
    else # not linux -> not supported
-      printf "${bold}${red}ERROR${normal} ... Unexpected operating system: $OSTYPE. Exiting (errorcode 99).\n"
+      printf "${bold}${red}ERROR${normal}\tUnexpected operating system: $OSTYPE. Exiting (errorcode 99).\n"
       exit 99
    fi
 }
@@ -42,7 +42,7 @@ function checkLinuxDesktopEnvironment()
 	# output display dimensions if possible
 	if [ "$(which xdpyinfo)" ]; then
 		displayResolution=$(xdpyinfo  | grep dimensions)
-		printf "${bold}${green}OK${normal} ... Display $displayResolution\n"
+		printf "${bold}${green}OK${normal}\tDisplay $displayResolution\n"
 	fi
 
    #desktopEnv=$DESKTOP_SESSION
@@ -61,16 +61,16 @@ function checkLinuxDesktopEnvironment()
       ##"GNOME")
          # Check: is it gnome3?
          if [ "$(pidof gnome-settings-daemon)" ]; then
-            printf "${bold}${green}OK${normal} ... Detected Gnome 3 (supported)\n"
+            printf "${bold}${green}OK${normal}\tDetected Gnome 3 (supported)\n"
             return
          fi
 
          if [ "$(which gconftool-2)" ]; then
-            printf "${bold}${green}OK${normal} ... Detected Gnome 2 (supported)\n"
+            printf "${bold}${green}OK${normal}\tDetected Gnome 2 (supported)\n"
             return
          fi
 
-         printf "${bold}${red}ERROR${normal} ... Unsupported desktop environment. Exiting (errorcode 99).\n"
+         printf "${bold}${red}ERROR${normal}\tUnsupported desktop environment. Exiting (errorcode 99).\n"
          exit 99
          ##;;
 
@@ -89,9 +89,9 @@ function checkLinuxDesktopEnvironment()
 # ---------------------------------------------------------------------
 function checkImageMagick() {
    if [ "$(which convert)" ]; then
-      printf "${bold}${green}OK${normal} ... Found ImageMagick (required)\n"
+      printf "${bold}${green}OK${normal}\tFound ImageMagick (required)\n"
    else
-      printf "${bold}${red}ERROR${normal} ... ImageMagick not found. Exiting (errorcode 99).\n"
+      printf "${bold}${red}ERROR${normal}\tImageMagick not found. Exiting (errorcode 99).\n"
       exit 99
    fi
 }
@@ -109,17 +109,17 @@ function checkRemoteRequirements()
 {
    # check for curl
    if [ "$(which curl)" ]; then
-      printf "${bold}${green}OK${normal} ... Found cURL (required for remote-mode)\n"
+      printf "${bold}${green}OK${normal}\tFound cURL (required for remote-mode)\n"
    else
-      printf "${bold}${red}ERROR${normal} ... cURL not found (required for remote-mode). Exiting (errorcode 99).\n"
+      printf "${bold}${red}ERROR${normal}\tcURL not found (required for remote-mode). Exiting (errorcode 99).\n"
       exit 99
    fi
 
    # check for jq
    if [ "$(which jq)" ]; then
-      printf "${bold}${green}OK${normal} ... Found JQ (required for remote-mode)\n"
+      printf "${bold}${green}OK${normal}\tFound JQ (required for remote-mode)\n"
    else
-      printf "${bold}${red}ERROR${normal} ... JQ not found (required for remote-mode). Exiting (errorcode 99).\n"
+      printf "${bold}${red}ERROR${normal}\tJQ not found (required for remote-mode). Exiting (errorcode 99).\n"
       exit 99
    fi
 }
@@ -145,10 +145,10 @@ function displayNotification() {
 function checkImageSourceFolder() {
    # if image source folder exists
    if [ -d "$localUserImageFolder" ]; then
-      printf "${bold}${green}OK${normal} ... Image source folder: ${underline}$localUserImageFolder${normal} is valid\n"       # can continue
+      printf "${bold}${green}OK${normal}\tImage source folder: ${underline}$localUserImageFolder${normal} is valid\n"       # can continue
       getNewRandomLocalFilePath                                                  # get a new local filepath
    else
-      printf "${bold}${red}ERROR${normal} ... Local mode but image source dir ${underline}$localUserImageFolder${normal} isnt a valid directory. Exiting (errorcode 99).\n"      # can continue
+      printf "${bold}${red}ERROR${normal}\tLocal mode but image source dir ${underline}$localUserImageFolder${normal} isnt a valid directory. Exiting (errorcode 99).\n"      # can continue
       exit 99
    fi
 }
@@ -162,17 +162,17 @@ function getRemoteMuzeiImage()
 {
    if ! [ -f ./muzeich.json ]; then
       curl -o muzeich.json 'https://muzeiapi.appspot.com/featured?cachebust=1'
-      printf "${bold}${green}OK${normal} ... Downloaded muzei.json (initial).\n"
+      printf "${bold}${green}OK${normal}\tDownloaded muzei.json (initial).\n"
    else
       curl -o muzeich2.json 'https://muzeiapi.appspot.com/featured?cachebust=1'
-      printf "${bold}${green}OK${normal} ... Downloaded muzei.json (checking for changes).\n"
+      printf "${bold}${green}OK${normal}\tDownloaded muzei.json (checking for changes).\n"
       # there is a new muzei image available
       if [ "$(cmp muzeich.json muzeich2.json)" ]; then
          mv muzeich2.json muzeich.json
-         printf "${bold}${green}OK${normal} ... There is a new Muzei image available. Loading it.\n"
+         printf "${bold}${green}OK${normal}\tThere is a new Muzei image available. Loading it.\n"
       else # muzei offers still the same image
          rm muzeich2.json # remove the second json file
-         printf "${bold}${green}OK${normal} ... There is no new Muzei image available. Nothing to do here.\n"
+         printf "${bold}${green}OK${normal}\tThere is no new Muzei image available. Nothing to do here.\n"
          exit
       fi
    fi
@@ -188,7 +188,7 @@ function getRemoteMuzeiImage()
    convert $imageFile $muzeiFilename
 
    newImage=$installationPath/$muzeiFilename
-   printf "${bold}${green}OK${normal} ... Finished getting latest Muzei image.\n"
+   printf "${bold}${green}OK${normal}\tFinished getting latest Muzei image.\n"
 }
 
 
@@ -198,11 +198,18 @@ function getRemoteMuzeiImage()
 
 # ---------------------------------------------------------------------
 # SELECT A RANDOM LOCAL FILE FROM USER SUPPLIED PATH
+#     only: .jpg, .jpeg, .png are accepted image formats so far.
 # ---------------------------------------------------------------------
 function getNewRandomLocalFilePath()
 {
    newImage=$(find $localUserImageFolder -type f | shuf -n 1)             # pick random image from source folder
-   printf "${bold}${green}OK${normal} ... Random image: ${underline}$newImage${normal}\n"
+
+   if [[ "$newImage" == *.jpg ]] || [[ "$newImage" == *.jpeg ]] || [[ "$newImage" == *.png ]] ; then
+      printf "${bold}${green}OK${normal}\tRandom image: ${underline}$newImage${normal}\n"
+   else # randomness picked not an image - lets try it again.
+      printf "${bold}${yellow}WARNING${normal}\tRandom file ($newImage) was not an image - retrying...\n"
+      getNewRandomLocalFilePath
+   fi
 }
 
 
@@ -215,54 +222,64 @@ function getNewRandomLocalFilePath()
 function generateNewWallpaper()
 {
    convert "$newImage" $backupFilename                               # copy random base image to project folder (using convert to ensure its always a png)
-   printf "${bold}${green}OK${normal} ... Finished mirroring source image to ${underline}$installationPath/$backupFilename${normal}\n"
+   printf "${bold}${green}OK${normal}\tFinished mirroring source image to ${underline}$installationPath/$backupFilename${normal}\n"
 
 
 	#$imageModificationMode
 	if [ -z "$imageModificationMode" ]; then
-		printf "${bold}${red}ERROR${normal} ... Image modification mode is not set, Please check ${underline}config.sh${normal}. Aborting\n"
+		printf "${bold}${red}ERROR${normal}\tImage modification mode is not set, Please check ${underline}config.sh${normal}. Aborting\n"
 		exit 99
 	else # mode is set - now check if its valid
 		case "$imageModificationMode" in
 
          # 0 = normal-mode
-			0) convert "$newImage" $blurCommand $dimCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-				printf "${bold}${green}OK${normal} ... Generated the new plain wallpaper in ${underline}$installationPath/tmp${normal}\n"
+			0) convert "$newImage" $blurCommand $dimCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
+				printf "${bold}${green}OK${normal}\tGenerated the new plain wallpaper in ${underline}$installationPath/tmp${normal}\n"
     			;;
 
          # 1 = grayscale
-			1) convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-   		   printf "${bold}${green}OK${normal} ... Generated the new grayscaled wallpaper in ${underline}$installationPath/tmp${normal}\n"
+			1) convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
+   		   printf "${bold}${green}OK${normal}\tGenerated the new grayscaled wallpaper in ${underline}$installationPath/tmp${normal}\n"
             ;;
 
          # 2 = sepia-mode
-			2) convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-				printf "${bold}${green}OK${normal} ... Generated the new sepia wallpaper in ${underline}$installationPath/tmp${normal}\n"
+			2) convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
+				printf "${bold}${green}OK${normal}\tGenerated the new sepia wallpaper in ${underline}$installationPath/tmp${normal}\n"
     			;;
 
          # 3 = colorize
-   		3) convert "$newImage" $blurCommand $dimCommand $colorizeCommand  $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-   			printf "${bold}${green}OK${normal} ... Generated the new colorized wallpaper in ${underline}$installationPath/tmp${normal}\n"
+   		3) convert "$newImage" $blurCommand $dimCommand $colorizeCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
+   			printf "${bold}${green}OK${normal}\tGenerated the new colorized wallpaper in ${underline}$installationPath/tmp${normal}\n"
        		;;
 
-			*) printf "${bold}${red}ERROR${normal} ... Image modification mode is set to ${underline}$imageModificationMode${normal} which isnt correct. Aborting\n"
+         # 4 = levelColors
+      	4) convert "$newImage" $blurCommand $dimCommand $levelColorsCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
+      		printf "${bold}${green}OK${normal}\tGenerated the new level-colors wallpaper in ${underline}$installationPath/tmp${normal}\n"
+         	;;
+
+			*) printf "${bold}${red}ERROR${normal}\tImage modification mode is set to ${underline}$imageModificationMode${normal} which isnt correct. Aborting\n"
 				exit 99
    			;;
 		esac
 
       # scale image to user-defined with if configured in config.sh
       if [ "$enableScaleToWidth" = true ]; then
-         convert $outputFilename -thumbnail $imageWidth $outputFilename     # Create a dimmed & blur-verion of the image into the working dir
-         printf "${bold}${green}OK${normal} ... Scaled image to defined width of ${underline}$imageWidth${normal} pixel.\n"
+         convert $workInProgess -thumbnail $imageWidth $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
+         printf "${bold}${green}OK${normal}\tScaled image to defined width of ${underline}$imageWidth${normal} pixel.\n"
       fi
 
       # Add Label if configured (testing)
       if [ "$addAppLabelOnGeneratedWallpaper" = true ] ; then
          #imageDimensions=$(identify -size geometry)
          #printf "$imageDimensions\n"
-         composite -geometry  +0+1200 "img/appLabel_150x40px.png" $outputFilename $outputFilename
-         printf "${bold}${green}OK${normal} ... Added app-label to ${underline}$installationPath/$outputFilename${normal}\n"
+         composite -geometry  +0+1200 "img/appLabel_150x40px.png" $workInProgess $workInProgess
+         printf "${bold}${green}OK${normal}\tAdded app-label to ${underline}$installationPath/$outputFilename${normal}\n"
       fi
+
+      # image creation is done - rename work-in-progress-file to final filename for new wallpaper
+      # this avoids sideeffects / racing conditions if we write several time to the filename which is in use at the same time
+      # -> avaoids flickering while script-execution
+      convert $workInProgess $outputFilename
 
       return
 	fi
@@ -279,7 +296,7 @@ function setLinuxWallpaper() {
    if [ "$(pidof gnome-settings-daemon)" ]; then
       /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$installationPath/$1
       displayNotification "$appName" "Wallpaper updated (using gsettings on Gnome 3)"
-      printf "${bold}${green}OK${normal} ... Wallpaper updated (using gsettings on Gnome 3)\n"
+      printf "${bold}${green}OK${normal}\tWallpaper updated (using gsettings on Gnome 3)\n"
       return
    fi
 
@@ -287,13 +304,13 @@ function setLinuxWallpaper() {
    if [ "$(which gconftool-2)" ]; then
       gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $installationPath/$1
       displayNotification "$appName" "Wallpaper updated (using gconftool on Gnome 2)"
-      printf "${bold}${green}OK${normal} ... Wallpaper updated (using gconftool on Gnome 2)\n"
+      printf "${bold}${green}OK${normal}\tWallpaper updated (using gconftool on Gnome 2)\n"
       return
    fi
 
-   printf "${bold}${red}ERROR${normal} ... Sorry but your system is not supported.\n"
-   printf "${bold}${red}ERROR${normal} ... Currently only Gnome is supported (using: gsettings and/or gconftool-2)\n"
-   printf "${bold}${red}ERROR${normal} ... More: ${underline}$appDocURL/Supported-Desktop-Environments${normal}. Exiting (errorcode 99).\n"
+   printf "${bold}${red}ERROR${normal}\tSorry but your system is not supported.\n"
+   printf "${bold}${red}ERROR${normal}\tCurrently only Gnome is supported (using: gsettings and/or gconftool-2)\n"
+   printf "${bold}${red}ERROR${normal}\tMore: ${underline}$appDocURL/Supported-Desktop-Environments${normal}. Exiting (errorcode 99).\n"
    exit 99
 }
 
@@ -306,13 +323,12 @@ function setLinuxWallpaper() {
 function cleanupUpdWallpDir()
 {
    if [ -f "$imageFile" ]; then
-      rm $imageFile
+      rm $imageFile # from remote mode: org muzei name with org name
    fi
 
-   #if [ -f "$muzeiFilename" ]
-      #then
-      #rm $muzeiFilename
-   #fi
+   if [ -f "$workInProgess" ];then
+      rm $workInProgess
+   fi
 
-   printf "${bold}${green}OK${normal} ... Finished cleaning up ${underline}$installationPath${normal}. Goodbye\n"
+   printf "${bold}${green}OK${normal}\tFinished cleaning up ${underline}$installationPath${normal}. Goodbye\n"
 }

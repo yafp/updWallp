@@ -16,6 +16,7 @@ appDocURL="https://github.com/yafp/updWallp/wiki"        # URL of project wiki
 #
 # local
 backupFilename="tmp/currentBaseWallpaper.png"             # filename for backup copy of selected file
+workInProgess="tmp/currentWorkInProgress.png"             # filename while processing
 outputFilename="tmp/currentGeneratedWallpaper.png"        # generated Wallpaper which is set as wallpaper
 # remote
 muzeiFilename="tmp/muzeiImage.png"

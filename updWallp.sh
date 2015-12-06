@@ -66,18 +66,18 @@ if [ -f $currentPath/config.sh ]; then # found config file
 
 				# for both: local and remote
 				checkOperatingSystem                         # check operating system
-				printf "${bold}${green}OK${normal} ... Installation folder is set to: ${underline}$installationPath${normal}\n"
+				printf "${bold}${green}OK${normal}\tInstallation folder is set to: ${underline}$installationPath${normal}\n"
 				checkImageMagick                             # function to check if ImageMagick is installed
 
 				# parameter was -l = local mode
 				if [ "$primaryParameter" = "-l" ]; then
-					printf "${bold}${green}OK${normal} ... Using local-mode (-l)\n"
+					printf "${bold}${green}OK${normal}\tUsing local-mode (-l)\n"
 					checkImageSourceFolder
 				fi
 
 				# parameter was -r = remote mode
 				if [ "$primaryParameter" = "-r" ]; then
-					printf "${bold}${green}OK${normal} ... Using remote-mode (-r)\n"
+					printf "${bold}${green}OK${normal}\tUsing remote-mode (-r)\n"
 					checkRemoteRequirements
 					getRemoteMuzeiImage
 				fi
@@ -97,7 +97,7 @@ if [ -f $currentPath/config.sh ]; then # found config file
 		exit 2 # die
 	fi # end of checking updWallp directory
 else # unable to load config.sh
-	printf "${bold}${red}ERROR${normal} Unable to find 'config.sh'. Exiting (errorcode 1)\n"
+	printf "${bold}${red}ERROR${normal}\tUnable to find 'config.sh'. Exiting (errorcode 1)\n"
 	#printf "$error1"
 	exit 1
 fi
