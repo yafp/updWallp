@@ -84,8 +84,6 @@ or via cron
 
 
 #### updWallpShowOrg.sh (Togglescript)
-![updWallpShowOrg_h](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallpShowOrg_h.png)
-
 Launch it manually
 
 > ./updWallpShowOrg.sh
