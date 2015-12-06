@@ -8,10 +8,8 @@
 # ---------------------------------------------------------------------
 # CONSTANT STRINGS
 # ---------------------------------------------------------------------
-
-# AppVersion
-appName="updWallp"
-appDocURL="https://github.com/yafp/updWallp/wiki"
+appName="updWallp"                                       # AppName
+appDocURL="https://github.com/yafp/updWallp/wiki"        # URL of project wiki
 
 
 # FILENAMES for ImageCreation
@@ -21,3 +19,6 @@ backupFilename="tmp/currentBaseWallpaper.png"             # filename for backup 
 outputFilename="tmp/currentGeneratedWallpaper.png"        # generated Wallpaper which is set as wallpaper
 # remote
 muzeiFilename="tmp/muzeiImage.png"
+
+
+primaryParameter=$1
