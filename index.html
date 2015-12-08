@@ -60,6 +60,58 @@ If you feel comfortable hacking the script you can go crazy and add tons of othe
 <li>notify-send (optional for desktop notifications)</li>
 </ul>
 
+  
+<h3><a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to get started in a few steps</h3>
+   
+<h4><a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get files</h4>
+<p></p>Downloads the latest build from <a href="https://github.com/yafp/updWallp/archive/master.zip">here</a>.</p>  
+
+
+<h4><a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h4>
+As initial step you have to define the installation directory in the main configuration script **config.sh**.
+
+Change
+<quote>installationPath=""</quote>
+
+to something like this
+<quote>installationPath="/home/username/path/to/updWallpFolder"</quote>
+
+
+
+<h4><a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h4>
+<h5><a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>updWallp.sh (Mainscript)</h5>
+<h6><a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Local-mode</h6>
+Execute:
+
+<quote>./updWallp.sh -l /path/to/yourLocalImageFolder</quote>
+
+Output:
+<img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_l.png">
+
+or via cron
+<quote>*/30 * * * * /path/to/updWallp/updWallp.sh -l /path/to/yourLocalImageFolder >/dev/null 2>&1</quote>
+
+<h6><a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Remote-mode</h6>
+Execute:
+
+<quote>./updWallp.sh -r</quote>
+
+Output:
+
+<img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_r.png">
+
+or via cron
+<quote>*/30 * * * * /path/to/updWallp/updWallp.sh -r >/dev/null 2>&1</quote>
+
+
+<h5><a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>updWallpShowOrg.sh (Togglescript)</h5>
+Execute:
+
+<quote>./updWallpShowOrg.sh</quote>
+
+Output:
+
+<img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallpShowOrg.png">
       
       
       
