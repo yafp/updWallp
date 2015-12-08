@@ -16,7 +16,7 @@
 # 1. INSTALLATIONPATH (mission-critical)
 #     example: $installationPath="/home/username/updWallp"
 # ---------------------------------------------------------------------
-installationPath="/home/fidel/Apps/updWallp"
+installationPath=""
 
 
 
