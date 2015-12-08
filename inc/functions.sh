@@ -40,46 +40,26 @@ function checkOperatingSystem()
 function checkLinuxDesktopEnvironment()
 {
 	# output display dimensions if possible
-	if [ "$(which xdpyinfo)" ]; then
+	if hash xdpyinfo 2>/dev/null; then
 		displayResolution=$(xdpyinfo  | grep dimensions)
 		printf "${bold}${green}OK${normal}\tDisplay $displayResolution\n"
 	fi
 
-   #desktopEnv=$DESKTOP_SESSION
-   ##desktopEnv=$XDG_CURRENT_DESKTOP
-   # optional using: $XDG_CURRENT_DESKTOP
 
-   #printf "Detected Desktop: $desktopEnv\n\n"
+   # Check: is it gnome 3?
+   if [ "$(pidof gnome-settings-daemon)" ]; then
+      printf "${bold}${green}OK${normal}\tDetected Gnome 3 (supported)\n"
+      return
+   fi
 
-   # possible answers:
-   #
-   # - gnome 3    = gnome
-   # - xfce4      = xfce4
-   # - KDE        = ?
+   #  Check: is it gnome 2?
+   if hash gconftool-2 2>/dev/null; then
+      printf "${bold}${green}OK${normal}\tDetected Gnome 2 (supported)\n"
+      return
+   fi
 
-   ##case  $desktopEnv  in
-      ##"GNOME")
-         # Check: is it gnome3?
-         if [ "$(pidof gnome-settings-daemon)" ]; then
-            printf "${bold}${green}OK${normal}\tDetected Gnome 3 (supported)\n"
-            return
-         fi
-
-         if [ "$(which gconftool-2)" ]; then
-            printf "${bold}${green}OK${normal}\tDetected Gnome 2 (supported)\n"
-            return
-         fi
-
-         printf "${bold}${red}ERROR${normal}\tUnsupported desktop environment. Exiting (errorcode 99).\n"
-         exit 99
-         ##;;
-
-      ##*)
-      ##   printf "${bold}${red}ERROR${normal} ... Unsupported Desktop Envorinment detected ($desktopEnv).\n"
-      ##   printf "${bold}${red}ERROR${normal} ... Currently only Gnome 2 & 3 are supported.\n"
-      ##   printf "${bold}${red}ERROR${normal} ... More: ${underline}https://github.com/yafp/updWallp/wiki/Supported-Desktop-Environments${normal}. Aborting\n"
-      ##   exit
-   ##esac
+   # something else - most likely not supported
+   printf "${bold}${yellow}WARNING${normal}\tUnsupported desktop environment. It's getting experimental right now.\n"
 }
 
 
@@ -88,7 +68,7 @@ function checkLinuxDesktopEnvironment()
 # Check if imagemagick is installed
 # ---------------------------------------------------------------------
 function checkImageMagick() {
-   if [ "$(which convert)" ]; then
+   if hash convert 2>/dev/null; then
       printf "${bold}${green}OK${normal}\tFound ImageMagick (required)\n"
    else
       printf "${bold}${red}ERROR${normal}\tImageMagick not found. Exiting (errorcode 99).\n"
@@ -108,7 +88,7 @@ function checkImageMagick() {
 function checkRemoteRequirements()
 {
    # check for curl
-   if [ "$(which curl)" ]; then
+   if hash curl 2>/dev/null; then
       printf "${bold}${green}OK${normal}\tFound cURL (required for remote-mode)\n"
    else
       printf "${bold}${red}ERROR${normal}\tcURL not found (required for remote-mode). Exiting (errorcode 99).\n"
@@ -116,7 +96,7 @@ function checkRemoteRequirements()
    fi
 
    # check for jq
-   if [ "$(which jq)" ]; then
+   if hash jq 2>/dev/null; then
       printf "${bold}${green}OK${normal}\tFound JQ (required for remote-mode)\n"
    else
       printf "${bold}${red}ERROR${normal}\tJQ not found (required for remote-mode). Exiting (errorcode 99).\n"
@@ -202,13 +182,14 @@ function getRemoteMuzeiImage()
 # ---------------------------------------------------------------------
 function getNewRandomLocalFilePath()
 {
-   newImage=$(find $localUserImageFolder -type f | shuf -n 1)             # pick random image from source folder
+   #newImage=$(find $localUserImageFolder -type f | shuf -n 1)             # pick random image from source folder
+   newImage=$(find $localUserImageFolder -type f \( -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.JPEG' -o -name '*.png' -o -name '*.PNG' \) | shuf -n 1)
 
-   if [[ "$newImage" == *.jpg ]] || [[ "$newImage" == *.jpeg ]] || [[ "$newImage" == *.png ]] ; then
+   if ! [ -f "$localUserImageFolder/$newImage" ]; then #check if random picked file exists
       printf "${bold}${green}OK${normal}\tRandom image: ${underline}$newImage${normal}\n"
-   else # randomness picked not an image - lets try it again.
-      printf "${bold}${yellow}WARNING${normal}\tRandom file ($newImage) was not an image - retrying...\n"
-      getNewRandomLocalFilePath
+   else
+      printf "${bold}${red}ERROR${normal}\tRandom file ($newImage) was not an image. Exiting (errorcode 88)\n"
+      exit 88
    fi
 }
 
@@ -301,15 +282,25 @@ function setLinuxWallpaper() {
    fi
 
    # Setting wallpaper on Gnome 2
-   if [ "$(which gconftool-2)" ]; then
+   if hash gconftool-2 2>/dev/null; then
       gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $installationPath/$1
       displayNotification "$appName" "Wallpaper updated (using gconftool on Gnome 2)"
       printf "${bold}${green}OK${normal}\tWallpaper updated (using gconftool on Gnome 2)\n"
       return
    fi
 
+   printf "${bold}${yellow}WARNING${normal}\tNo supported desktop environment detected. Starting experimental tests\n"
+
+
+   if hash feh 2>/dev/null; then
+      printf "${bold}${green}OK${normal}\tDetected feh\n"
+      feh --bg-max $installationPath/$1
+      printf "${bold}${green}OK${normal}\tWallpaper updated (using feh)\n"
+      return
+   fi
+
    printf "${bold}${red}ERROR${normal}\tSorry but your system is not supported.\n"
-   printf "${bold}${red}ERROR${normal}\tCurrently only Gnome is supported (using: gsettings and/or gconftool-2)\n"
+   printf "${bold}${red}ERROR${normal}\tCurrently only Gnome is supported (using: gsettings and/or gconftool-2 - feh is used for nonsupported environments)\n"
    printf "${bold}${red}ERROR${normal}\tMore: ${underline}$appDocURL/Supported-Desktop-Environments${normal}. Exiting (errorcode 99).\n"
    exit 99
 }
