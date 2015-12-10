@@ -3,4 +3,5 @@ tmp/currentBaseWallpaper.png
 tmp/currentGeneratedWallpaper.png
 tmp/currentWorkInProgress.png
 tmp/muzeiImage.png
+logs/*.txt
 muzeich.json
