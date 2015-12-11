@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#  Name:       appVersion.sh
+#  Name:       colorDefinitions.sh
 #  Function:   Defines the color-codes for terminal output of updWallp
 #  Github:     https://github.com/yafp/updWallp
 #
@@ -27,4 +27,3 @@ blue=$(tput setaf 4)
 magenta=$(tput setaf 5)
 cyan=$(tput setaf 6)
 white=$(tput setaf 7)
-bright=$(tput bold)

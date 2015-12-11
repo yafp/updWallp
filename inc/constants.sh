@@ -8,8 +8,9 @@
 # ---------------------------------------------------------------------
 # CONSTANT STRINGS
 # ---------------------------------------------------------------------
-appName="updWallp"                                       # AppName
-appDocURL="https://github.com/yafp/updWallp/wiki"        # URL of project wiki
+readonly appName="updWallp"                                       # AppName
+readonly appSubTitle="the wallpaper refresher"
+readonly appDocURL="https://github.com/yafp/updWallp/wiki"        # URL of project wiki
 
 
 # FILENAMES for ImageCreation

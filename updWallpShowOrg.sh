@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #  Name:			updWallpShowOrg.sh
 #  Function:	Script to temporary toggle back to the original image for a defined time
@@ -45,14 +45,14 @@ if [ -f $currentPath/config.sh ]; then # found config file
 				printf "${bold}Usage:${normal}\n"
 				printf "  ./updWallpShowOrg.sh\n\n"
 				printf "${bold}Documentation:${normal}\n"
-				printf "  $appDocURL\n"
+				printf "  $appDocURL\n\n"
 				exit 0 # exit with success
 
          elif [ "$primaryParameter" = "-v" ] || [ "$primaryParameter" = "--version" ] ; then
             printf "\n${bold}Version:${normal}\n"
             printf "  $appVersion\n\n"
             printf "${bold}Documentation:${normal}\n"
-            printf "  $appDocURL\n"
+            printf "  $appDocURL\n\n"
             exit 0 # exit with success-message
 			else
 				#printf "${bold}${red}ERROR${normal} Invalid parameter '$1'\n\nStart with: '-h' for some basic instructions.\n"

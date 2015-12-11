@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #  Name:       updWallp.sh
 #  Function:   Script to pick a random image from a folder, generate a dimmed & blured version of it and set it as wallpaper
@@ -48,10 +48,10 @@ if [ -f $currentPath/config.sh ]; then # found config file
 						printf "\n${bold}Usage:${normal}\n"
 						printf "  Help:         ./updWallp.sh -h\n"
 						printf "  Version:      ./updWallp.sh -v\n"
-						printf "  Local-mode:   ./updWallp.sh -l /path/to/local/image/folder\n"
+						printf "  Local-mode:   ./updWallp.sh -l /full/path/to/your/local/image/folder\n"
 						printf "  Remote-mode:  ./updWallp.sh -r\n\n"
 						printf "${bold}Documentation:${normal}\n"
-						printf "  $appDocURL\n"
+						printf "  $appDocURL\n\n"
 						exit 0 # exit with success-message
 				fi
 
@@ -60,13 +60,13 @@ if [ -f $currentPath/config.sh ]; then # found config file
 						printf "\n${bold}Version:${normal}\n"
 						printf "  $appVersion\n\n"
 						printf "${bold}Documentation:${normal}\n"
-						printf "  $appDocURL\n"
+						printf "  $appDocURL\n\n"
 						exit 0 # exit with success-message
 				fi
 
 				# for both: local and remote
 				checkOperatingSystem                         # check operating system
-				printf "${bold}${green}OK${normal}\tInstallation folder is set to: ${underline}$installationPath${normal}\n"
+				#printf "${bold}${green}OK${normal}\tInstallation folder is set to: ${underline}$installationPath${normal}\n"
 				checkImageMagick                             # function to check if ImageMagick is installed
 
 				# parameter was -l = local mode
@@ -85,7 +85,7 @@ if [ -f $currentPath/config.sh ]; then # found config file
 				generateNewWallpaper                         # generates a new wallpaper
 				setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
 				cleanupUpdWallpDir                           # Cleaning up
-				exit 0 													# exit with success-message
+				exit 0 										# exit with success-message
 
 			else # parameter was not valid
 					printf "$error04"
@@ -93,11 +93,10 @@ if [ -f $currentPath/config.sh ]; then # found config file
 			fi
 		fi
 	else # = updWallp directory is not set or not valid
-		printf "$error02"
+		printf "ERROR\tInvalid installationPath ($installationPath) in 'config.sh'. Exiting (errorcode 2)\n"
 		exit 2 # die
 	fi # end of checking updWallp directory
 else # unable to load config.sh
-	printf "${bold}${red}ERROR${normal}\tUnable to find 'config.sh'. Exiting (errorcode 1)\n"
-	#printf "$error1"
+	printf "ERROR\tUnable to find 'config.sh'. Exiting (errorcode 1)\n"
 	exit 1
 fi

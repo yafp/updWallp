@@ -5,16 +5,18 @@
 #  Github:     https://github.com/yafp/updWallp
 #
 
-# ---------------------------------------------------------------------
-# DECLARE VARIABLES
-# ---------------------------------------------------------------------
-#declare installationPath      # Type: string       Function: holds the installation-path of the project folder
 
+
+# ---------------------------------------------------------------------
+# 0. DEBUGGING OUTPUT
+#       To enable bash debug enable the following: set -x
+# ---------------------------------------------------------------------
+#set -x
 
 
 # ---------------------------------------------------------------------
 # 1. INSTALLATIONPATH (mission-critical)
-#     example: $installationPath="/home/username/updWallp"
+#       example: $installationPath="/home/username/updWallp"
 # ---------------------------------------------------------------------
 installationPath=""
 
@@ -22,8 +24,8 @@ installationPath=""
 
 # ---------------------------------------------------------------------
 # 2. NOTIFICATION RELATED
-#     if enabled - updWallp will display desktop notifications using notify-send
-#     annoying if updWallp.sh is used in short cycles
+#       if enabled - updWallp will display desktop notifications using notify-send
+#       annoying if updWallp.sh is used in short cycles
 # ---------------------------------------------------------------------
 enableNotifications=false                            # true or false
 notifyPath="/usr/bin/notify-send"                    # defines the path to notify-send which is used to display desktop notifications
@@ -32,10 +34,10 @@ notifyPath="/usr/bin/notify-send"                    # defines the path to notif
 
 # ---------------------------------------------------------------------
 # 3. IMAGEMAGICK RELATED
-#     images get blured and dimmed - thats the core-function of this project
-#     feel free to modify the blur and dim commands
-#     empty commands result in no change to the image ;)
-#     blurCommand & dimCommand are used in all modes (see 4.)
+#       images get blured and dimmed - thats the core-function of this project
+#       feel free to modify the blur and dim commands
+#       empty commands result in no change to the image ;)
+#       blurCommand & dimCommand are used in all modes (see 4.)
 # ---------------------------------------------------------------------
 # blur  {radius}x{sigma}
 # The important setting in the above is the second sigma value.
@@ -50,53 +52,74 @@ blurCommand="-channel RGBA  -blur 0x16"
 
 # Dim
 #
-# Example:  -brightness-contrast -30x10
-#               where -30 is to darken by 30 and +10 is to increase the contrast by 10.
+# Example:
+#       -brightness-contrast -30x10
+#       where -30 is to darken by 30 and +10 is to increase the contrast by 10.
 dimCommand="-brightness-contrast -10x5"
 
 
 
 # ---------------------------------------------------------------------
 # 4. IMAGE-MODIFICATIONS-MODES
-#	0	= normal (no changes)
-#	1	= grayscale
-#	2	= sepia
-#  3  = colorize
-#  4  = level-colors
+#       0 = normal (no changes)
+#       1 = grayscale
+#       2 = sepia
+#       3 = colorize
+#       4 = level-colors
 # ---------------------------------------------------------------------
 imageModificationMode="1"                       # must be set
 #
 grayscaleCommand="-type Grayscale"              # Grayscale command
 sepiaCommand="-sepia-tone 90%"                  # Sepia command
 colorizeCommand="-fill white -colorize 50%"     # colorize
-levelColorsCommand="+level-colors Navy,DarkGreen"  # colorize:
-
-                                                #     example:
-                                                #        Navy,
-                                                #       or:
-                                                #        Navy, DarkGreen
-
+levelColorsCommand="+level-colors Navy,DarkGreen"  # level-colors: 1 or 2 colors
+#       example:    Navy,
+#       or:         Navy, DarkGreen
+#
 # other ideas:                                  http://www.imagemagick.org/Usage/color_mods/
 #
 #  Sigmoidal Non-linearity Contrast
 #     cmd="-sigmoidal-contrast 10,50%"  # colorize:
-#
-# Tinting:
-#     cmd="-fill white -colorize 50%"
+
 
 
 
 # ---------------------------------------------------------------------
 # 5. RESIZE/SCALE TO WIDTH (OPTIONAL)
-#     if enabled updWallp scales the created image down to the user-defined with
+#       if enabled updWallp scales the created image down to the user-defined with
 # ---------------------------------------------------------------------
-enableScaleToWidth=true
+enableScaleToWidth=false
 imageWidth="1920" # px width for output
 
 
 
+
 # ---------------------------------------------------------------------
-# 6. ADD-LABEL-TO-WALLPAPER (OPTIONAL)
-#     if enabled - adds a 'created-with-updwallp-label to the image
+# 6. PORTRAIT VS LANDSCAPE (OPTIONAL)
+#       if enabled (true) updWallp tries to use only landscape images from the user-supplied folder in local-mode
+# ---------------------------------------------------------------------
+useOnlyLandscapeImages=true # true or false
+
+
+
+
+
+# ---------------------------------------------------------------------
+# 7. ADD-LABEL-TO-WALLPAPER (OPTIONAL)
+#       if enabled - adds a 'created-with-updwallp-label to the image
 # ---------------------------------------------------------------------
 addAppLabelOnGeneratedWallpaper=false 	# true or false
+
+
+
+
+
+# ---------------------------------------------------------------------
+# 8. LOGGING MODE (logging is only used in updWallp.sh)
+#       0 = no logging (default)
+#       1 = syslog
+#       2 = individual log in project folder
+#
+#       Example: loggingMode=1
+# ---------------------------------------------------------------------
+loggingMode=2
