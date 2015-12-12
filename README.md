@@ -26,6 +26,33 @@ If you feel comfortable hacking the script you can go crazy and add tons of othe
 A second bash script (*updWallpShowOrg.sh*) offers the option to temporary toggle the wallpaper back to the original (non-blured & dimmed) version of the current wallpaper for x seconds.
 
 
+## Example Outputs
+The following source image
+
+![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleBase.png)
+
+Results in **local mode** (operationMode=1) and **normal (imageModificationMode=0)** in
+
+![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode0.png)
+
+Results in **local mode** (operationMode=1) and **grayscale** (imageModificationMode=1) in
+
+![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode1.png)
+
+Results in **local mode** (operationMode=1) and **sepia** (imageModificationMode=2) in
+
+![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode2.png)
+
+Results in **local mode** (operationMode=1) and **colorize** (imageModificationMode=3) in
+
+![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode3.png)
+
+Results in **local mode** (operationMode=1) and **level-colors** (imageModificationMode=4) in
+
+![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode4.png)
+
+Keep in mind that all parameters are changeable.
+
 
 ## Requirements
 - ImageMagick (needed in general)
@@ -41,7 +68,8 @@ A second bash script (*updWallpShowOrg.sh*) offers the option to temporary toggl
 ### Get files
 Downloads the latest build from [here](https://github.com/yafp/updWallp/archive/master.zip).
 
-### Configuration
+### Configuration (config.sh)
+#### Define installationPath variable
 As initial step you have to define the installation directory in the main configuration script **config.sh**.
 
 Change
@@ -54,33 +82,47 @@ to something like this
 installationPath="/home/username/path/to/updWallpFolder"
 ```
 
+#### Define operationMode variable
+You need to set the operation mode to either local or remote
+
+
+Change
+```bash
+operationMode=""
+```
+
+to something like this
+```bash
+operationMode="1"
+```
+
+and in case of **local mode** you have to define the local image source folder as well
+
+
+Change
+```bash
+localImageFolder=""
+```
+
+to something like this
+```bash
+localImageFolder="/full/path/to/your/local/image/folder"
+```
+
 
 
 ### Usage
 #### updWallp.sh (Mainscript)
-##### Local-mode
 Execute:
 
-> ./updWallp.sh -l /path/to/yourLocalImageFolder
+> ./updWallp.sh
 
-Output:
+Output (depends on the operation mode):
 
 ![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_l.png)
 
 or via cron
-> */30 * * * * /path/to/updWallp/updWallp.sh -l /path/to/yourLocalImageFolder >/dev/null 2>&1
-
-##### Remote-mode
-Execute:
-
-> ./updWallp.sh -r
-
-Output:
-
-![updWallp_r](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_updWallp_r.png)
-
-or via cron
-> */30 * * * * /path/to/updWallp/updWallp.sh -r >/dev/null 2>&1
+> */30 * * * * /path/to/updWallp/updWallp.sh >/dev/null 2>&1
 
 
 #### updWallpShowOrg.sh (Togglescript)
