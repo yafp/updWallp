@@ -14,7 +14,10 @@
 # ---------------------------------------------------------------------
 function startUp()
 {
-    printf "${bold}*** ${cyan}$appName ${white} - $appSubTitle ***${normal}\n\n"
+    printf "#######################################################################################\n"
+    printf "# ${bold}$appName - $appSubTitle ${normal}\n"
+    printf "#######################################################################################\n\n"
+
     hostname=$(hostname)
     logWallp "Starting $appName on $hostname"
 }
@@ -158,13 +161,13 @@ function displayNotification() {
 # Mode:
 # ---------------------------------------------------------------------
 function checkImageSourceFolder() {
-    if [ -d "$localUserImageFolder" ]; then # if image source folder exists
-        logWallp "Image source folder: $localUserImageFolder is valid"
-        #printf "${bold}${green}OK${normal}\tImage source folder: ${underline}$localUserImageFolder${normal} is valid\n"       # can continue
+    if [ -d "$localImageFolder" ]; then # if image source folder exists
+        logWallp "Image source folder: $localImageFolder is valid"
+        printf "${bold}${green}OK${normal}\tImage source folder: ${underline}$localImageFolder${normal} is valid\n"       # can continue
         getNewRandomLocalFilePath                                                  # get a new local filepath
     else
-        logWallp "Local mode but image source dir $localUserImageFolder isn't a valid directory. Exiting (errorcode 99)."
-        printf "${bold}${red}ERROR${normal}\tLocal mode but image source dir ${underline}$localUserImageFolder${normal} isn't a valid directory. Exiting (errorcode 99).\n"      # can continue
+        logWallp "Local mode but image source dir $localImageFolder isn't a valid directory. Exiting (errorcode 99)."
+        printf "${bold}${red}ERROR${normal}\tLocal mode but image source dir ${underline}$localImageFolder${normal} isn't a valid directory. Exiting (errorcode 99).\n"      # can continue
         exit 99
     fi
 }
@@ -229,10 +232,9 @@ function getRemoteMuzeiImage()
 # ---------------------------------------------------------------------
 function getNewRandomLocalFilePath()
 {
-    #newImage=$(find $localUserImageFolder -type f | shuf -n 1)             # pick random image from source folder
-    newImage=$(find $localUserImageFolder -type f \( -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.JPEG' -o -name '*.png' -o -name '*.PNG' \) | shuf -n 1)
+    newImage=$(find $localImageFolder -type f \( -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.JPEG' -o -name '*.png' -o -name '*.PNG' \) | shuf -n 1)
 
-    if ! [ -f "$localUserImageFolder/$newImage" ]; then #check if random picked file exists
+    if ! [ -f "$localImageFolder/$newImage" ]; then #check if random picked file exists
 
         # if only landscape images should be used
         if [ "$useOnlyLandscapeImages" = true ]; then
@@ -281,27 +283,27 @@ function generateNewWallpaper()
 
          # 0 = normal-mode
 			0) convert "$newImage" $blurCommand $dimCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-				printf "${bold}${green}OK${normal}\tGenerated the new plain wallpaper in ${underline}$installationPath/tmp${normal}\n"
+				printf "${bold}${green}OK${normal}\tGenerated the new plain wallpaper in ${underline}$installationPath$outputFilename${normal}\n"
     			;;
 
             # 1 = grayscale
 			1) convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-   		       printf "${bold}${green}OK${normal}\tGenerated the new grayscaled wallpaper in ${underline}$installationPath/tmp${normal}\n"
+   		       printf "${bold}${green}OK${normal}\tGenerated the new grayscaled wallpaper in ${underline}$installationPath$outputFilename${normal}\n"
                ;;
 
             # 2 = sepia-mode
 		    2)  convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-			    printf "${bold}${green}OK${normal}\tGenerated the new sepia wallpaper in ${underline}$installationPath/tmp${normal}\n"
+			    printf "${bold}${green}OK${normal}\tGenerated the new sepia wallpaper in ${underline}$installationPath$outputFilename${normal}\n"
     			;;
 
             # 3 = colorize
    		    3)  convert "$newImage" $blurCommand $dimCommand $colorizeCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-   			    printf "${bold}${green}OK${normal}\tGenerated the new colorized wallpaper in ${underline}$installationPath/tmp${normal}\n"
+   			    printf "${bold}${green}OK${normal}\tGenerated the new colorized wallpaper in ${underline}$installationPath$outputFilename${normal}\n"
        		    ;;
 
             # 4 = levelColors
             4)  convert "$newImage" $blurCommand $dimCommand $levelColorsCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-                printf "${bold}${green}OK${normal}\tGenerated the new level-colors wallpaper in ${underline}$installationPath/tmp${normal}\n"
+                printf "${bold}${green}OK${normal}\tGenerated the new level-colors wallpaper in ${underline}$installationPath$outputFilename${normal}\n"
                 ;;
 
 		    *)  printf "${bold}${red}ERROR${normal}\tImage modification mode is set to ${underline}$imageModificationMode${normal} which isnt correct. Aborting\n"
@@ -378,6 +380,44 @@ function setLinuxWallpaper() {
     printf "${bold}${red}ERROR${normal}\tTry installing 'feh' and then re-run the script again.\n"
     printf "${bold}${red}ERROR${normal}\tMore: ${underline}$appDocURL/Supported-Desktop-Environments${normal}. Exiting (errorcode 99).\n"
     exit 99
+}
+
+
+
+
+# ---------------------------------------------------------------------
+# Name:             displayAppVersion
+# Function:         Outputs the app version
+# Mode:             local and remote
+# ---------------------------------------------------------------------
+function displayAppVersion()
+{
+    printf "\n${bold}Version:${normal}\n"
+    printf "  $appVersion\n\n"
+    printf "${bold}Documentation:${normal}\n"
+    printf "  $appDocURL\n\n"
+    exit 0 # exit with success-message
+}
+
+
+
+# ---------------------------------------------------------------------
+# Name:             displayAppHelp
+# Function:         Outputs the app help
+# Mode:             local and remote
+# ---------------------------------------------------------------------
+function displayAppHelp()
+{
+    printf "\n${bold}Usage:${normal}\n"
+    printf "  Mainscript:   ./updWallp.sh\n"
+    printf "  Togglescript: ./updWallpShowOrg.sh\n\n"
+    printf "  Help:         -h\n"
+    printf "                --help\n\n"
+    printf "  Version:      -v\n"
+    printf "                --version\n\n"
+    printf "${bold}Documentation:${normal}\n"
+    printf "  $appDocURL\n\n"
+    exit 0 # exit with success-message
 }
 
 

@@ -5,8 +5,7 @@
 #  Usage:
 #					help:						./updWallp.sh -h
 #					version:					./updWallp.sh -v
-#					local mode: 			./updWallp.sh -l /path/to/yourImageSourceFolder
-#					remote mode: 			./updWallp.sh -r
+#					core function:				./updWallp.sh
 #
 #  Github:     https://github.com/yafp/updWallp
 #
@@ -33,67 +32,63 @@ if [ -f $currentPath/config.sh ]; then # found config file
 		source inc/loader.sh # source loader.sh
 		startUp
 
-		# Check if user supplied a parameter $1 to set a mode
-		if [ -z "$primaryParameter" ]; then
-			# user did not supply $1
-			printf "$error03"
-			exit 3
-		else # user supplied at least $1
+		# NEW
+		#
+		case "$primaryParameter" in
+			"-h")
+				displayAppHelp
+    			;;
 
-			# valid parameters
-			if [ "$primaryParameter" = "-h" ] || [ "$primaryParameter" = "-l" ] || [ "$primaryParameter" = "-r" ] || [ "$primaryParameter" = "-v" ] || [ "$primaryParameter" = "--version" ]; then
+			"--help")
+				displayAppHelp
+				;;
 
-				# parameter was -h
-				if [ "$primaryParameter" = "-h" ]; then
-						printf "\n${bold}Usage:${normal}\n"
-						printf "  Help:         ./updWallp.sh -h\n"
-						printf "  Version:      ./updWallp.sh -v\n"
-						printf "  Local-mode:   ./updWallp.sh -l /full/path/to/your/local/image/folder\n"
-						printf "  Remote-mode:  ./updWallp.sh -r\n\n"
-						printf "${bold}Documentation:${normal}\n"
-						printf "  $appDocURL\n\n"
-						exit 0 # exit with success-message
-				fi
+			"-v")
+				displayAppVersion
+	    		;;
 
-				# parameter was -v or --version
-				if [ "$primaryParameter" = "-v" ] || [ "$primaryParameter" = "--version" ]; then
-						printf "\n${bold}Version:${normal}\n"
-						printf "  $appVersion\n\n"
-						printf "${bold}Documentation:${normal}\n"
-						printf "  $appDocURL\n\n"
-						exit 0 # exit with success-message
-				fi
+			"--version")
+				displayAppVersion
+				;;
 
-				# for both: local and remote
+			"")
+				# seems like script should do some actual work .... check operationMode
 				checkOperatingSystem                         # check operating system
-				#printf "${bold}${green}OK${normal}\tInstallation folder is set to: ${underline}$installationPath${normal}\n"
 				checkImageMagick                             # function to check if ImageMagick is installed
 
-				# parameter was -l = local mode
-				if [ "$primaryParameter" = "-l" ]; then
-					printf "${bold}${green}OK${normal}\tUsing local-mode (-l)\n"
-					checkImageSourceFolder
-				fi
+				if [ "$operationMode" = "1" ] || [ "$operationMode" = "2" ] ; then # if operationMode is valid
 
-				# parameter was -r = remote mode
-				if [ "$primaryParameter" = "-r" ]; then
-					printf "${bold}${green}OK${normal}\tUsing remote-mode (-r)\n"
-					checkRemoteRequirements
-					getRemoteMuzeiImage
-				fi
+					# if configured to local mode
+					if [ "$operationMode" = "1" ]; then
+						printf "${bold}${green}OK${normal}\tUsing local-mode (-l)\n"
+						checkImageSourceFolder
+					fi
 
-				generateNewWallpaper                         # generates a new wallpaper
-				setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
-				cleanupUpdWallpDir                           # Cleaning up
-				exit 0 										# exit with success-message
+					# if configured to remote mode
+					if [ "$operationMode" = "2" ]; then
+						printf "${bold}${green}OK${normal}\tUsing remote-mode (-r)\n"
+						checkRemoteRequirements
+						getRemoteMuzeiImage
+					fi
 
-			else # parameter was not valid
-					printf "$error04"
-					exit 4
-			fi
-		fi
+					generateNewWallpaper                         # generates a new wallpaper
+					setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
+					cleanupUpdWallpDir                           # Cleaning up
+					exit 0 										# exit with success-message
+
+				else
+					printf "${bold}${red}ERROR${normal}\tInvalid operationMode ($operationMode) in ${underline}config.sh${normal}. Check config.sh.\n"
+					exit 99
+				fi # check if operationMode is valid or not
+				;;
+
+			*)
+				printf "$error04"
+				exit 4
+		esac
+
 	else # = updWallp directory is not set or not valid
-		printf "ERROR\tInvalid installationPath ($installationPath) in 'config.sh'. Exiting (errorcode 2)\n"
+		printf "ERROR\tInvalid installationPath ($installationPath) in ${underline}config.sh${normal}. Exiting (errorcode 2)\n"
 		exit 2 # die
 	fi # end of checking updWallp directory
 else # unable to load config.sh

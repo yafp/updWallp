@@ -16,19 +16,24 @@
 
 # ---------------------------------------------------------------------
 # 1. INSTALLATIONPATH (mission-critical)
-#       example: $installationPath="/home/username/updWallp"
+#       example: installationPath="/home/username/updWallp"
 # ---------------------------------------------------------------------
 installationPath=""
 
 
 
 # ---------------------------------------------------------------------
-# 2. NOTIFICATION RELATED
-#       if enabled - updWallp will display desktop notifications using notify-send
-#       annoying if updWallp.sh is used in short cycles
+# 2. OPERATION-MIDE
+#       1 = local mode
+#       2 = remote mode (muzei)
+#
+#       example:    operationMode="1"
 # ---------------------------------------------------------------------
-enableNotifications=false                            # true or false
-notifyPath="/usr/bin/notify-send"                    # defines the path to notify-send which is used to display desktop notifications
+operationMode="1"
+
+# localImageFolder defines the path to the local image source
+# must be defined for local-mode
+localImageFolder=""
 
 
 
@@ -72,7 +77,7 @@ imageModificationMode="1"                       # must be set
 grayscaleCommand="-type Grayscale"              # Grayscale command
 sepiaCommand="-sepia-tone 90%"                  # Sepia command
 colorizeCommand="-fill white -colorize 50%"     # colorize
-levelColorsCommand="+level-colors Navy,DarkGreen"  # level-colors: 1 or 2 colors
+levelColorsCommand="+level-colors Black,LightGreen"  # level-colors: 1 or 2 colors
 #       example:    Navy,
 #       or:         Navy, DarkGreen
 #
@@ -103,7 +108,6 @@ useOnlyLandscapeImages=true # true or false
 
 
 
-
 # ---------------------------------------------------------------------
 # 7. ADD-LABEL-TO-WALLPAPER (OPTIONAL)
 #       if enabled - adds a 'created-with-updwallp-label to the image
@@ -113,9 +117,19 @@ addAppLabelOnGeneratedWallpaper=false 	# true or false
 
 
 
+# ---------------------------------------------------------------------
+# 8. NOTIFICATION RELATED
+#       if enabled - updWallp will display desktop notifications using notify-send
+#       annoying if updWallp.sh is used in short cycles
+# ---------------------------------------------------------------------
+enableNotifications=false                            # true or false
+notifyPath="/usr/bin/notify-send"                    # defines the path to notify-send which is used to display desktop notifications
+
+
+
 
 # ---------------------------------------------------------------------
-# 8. LOGGING MODE (logging is only used in updWallp.sh)
+# 9. LOGGING MODE (logging is only used in updWallp.sh)
 #       0 = no logging (default)
 #       1 = syslog
 #       2 = individual log in project folder
