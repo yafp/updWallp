@@ -18,7 +18,7 @@
 # 1. INSTALLATIONPATH (mission-critical)
 #       example: installationPath="/home/username/updWallp"
 # ---------------------------------------------------------------------
-installationPath=""
+installationPath="/home/fidel/Apps/updWallp"
 
 
 
@@ -29,11 +29,11 @@ installationPath=""
 #
 #       example:    operationMode="1"
 # ---------------------------------------------------------------------
-operationMode="2"
+operationMode="1"
 
 # localImageFolder defines the path to the local image source
 # must be defined for local-mode
-localImageFolder=""
+localImageFolder="/media/mnt_raid1_3000/MEDIA/Pictures/Pics_For_TV/All_Images/"
 
 
 

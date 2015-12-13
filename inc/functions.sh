@@ -31,7 +31,7 @@ function startUp()
 # ---------------------------------------------------------------------
 function validateConfig()
 {
-    printf "${bold}${green}OK${normal}\tStarting config validation...\n"
+    printf "${bold}Config validation ...${normal}\n"
 
     # check installationPath
     #
@@ -86,7 +86,8 @@ function validateConfig()
         fi
     fi
 
-    printf "${bold}${green}OK${normal}\tFinished config validation. Everything looks fine.\n"
+    printf "${bold}${green}OK${normal}\tFinished config validation. Everything looks fine.\n\n"
+    printf "${bold}Image handling ...${normal}\n"
 }
 
 
@@ -100,10 +101,12 @@ function validateConfig()
 function checkOperatingSystem()
 {
     if [[ $OSTYPE = *linux* ]]; then # we are on linux - so continue checking
-        #printf "${bold}${green}OK${normal}\tOperating system: $OSTYPE\n"
-        validateConfig
+        validateConfig # valide the mission critical config values
+        logWallp "Config validation passed."
+
         checkResolution # Check which desktop environment is in use
         logWallp "Detected supported operating system."
+
     else # not linux -> not supported
         printf "${bold}${red}ERROR${normal}\tUnexpected operating system: $OSTYPE. Exiting (errorcode 99).\n"
         logWallp "Detected unsupported operating system. Exiting (errorcode 99)."
@@ -349,7 +352,7 @@ function generateNewWallpaper()
     # -> avoids flickering while script-execution
     convert $workInProgess $outputFilename
 
-    printf "${bold}${green}OK${normal}\tFinished image processing\n"
+    printf "${bold}${green}OK${normal}\tFinished image processing\n\n"
     return
 }
 
@@ -362,7 +365,7 @@ function generateNewWallpaper()
 # ---------------------------------------------------------------------
 function setLinuxWallpaper() {
 
-    printf "${bold}${green}OK${normal}\tTrying to set the wallpaper ...\n"
+    printf "${bold}Updating wallpaper ...${normal}\n"
 
     # gnome-settings-daemon
     if [ "$(pidof gnome-settings-daemon)" ]; then
@@ -370,7 +373,7 @@ function setLinuxWallpaper() {
         message="Wallpaper updated (using gsettings/gnome-settings-daemon)"
         displayNotification "$appName" "$message"
         logWallp "$message"
-        printf "${bold}${green}OK${normal}\t$message\n"
+        printf "${bold}${green}OK${normal}\t$message\n\n"
         return
     fi
 
@@ -380,7 +383,7 @@ function setLinuxWallpaper() {
         displayNotification "$appName" "Wallpaper updated (using gconftool2)"
         message="Wallpaper updated (using gconftool2)"
         logWallp "$message"
-        printf "${bold}${green}OK${normal}\t$message\n"
+        printf "${bold}${green}OK${normal}\t$message\n\n"
         return
     fi
 
@@ -390,7 +393,7 @@ function setLinuxWallpaper() {
         feh --bg-max $installationPath/$1
         message="Wallpaper updated (using feh)"
         logWallp "$message"
-        printf "${bold}${green}OK${normal}\t$message\n"
+        printf "${bold}${green}OK${normal}\t$message\n\n"
         return
     fi
 
@@ -522,6 +525,8 @@ function printfWallp()
 # ---------------------------------------------------------------------
 function cleanupUpdWallpDir()
 {
+    printf "${bold}Post-processing ...${normal}\n"
+
     if [ -f "$imageFile" ]; then
         rm $imageFile # from remote mode: org muzei name with org name
     fi
