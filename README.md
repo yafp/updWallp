@@ -31,23 +31,23 @@ The following source image
 
 ![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleBase.png)
 
-Results in **local mode** (operationMode=1) and **normal (imageModificationMode=0)** in
+Using **local mode** (operationMode=1) and **normal** (imageModificationMode=0)
 
 ![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode0.png)
 
-Results in **local mode** (operationMode=1) and **grayscale** (imageModificationMode=1) in
+Using **local mode** (operationMode=1) and **grayscale** (imageModificationMode=1)
 
 ![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode1.png)
 
-Results in **local mode** (operationMode=1) and **sepia** (imageModificationMode=2) in
+Using **local mode** (operationMode=1) and **sepia** (imageModificationMode=2)
 
 ![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode2.png)
 
-Results in **local mode** (operationMode=1) and **colorize** (imageModificationMode=3) in
+Using in **local mode** (operationMode=1) and **colorize** (imageModificationMode=3)
 
 ![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode3.png)
 
-Results in **local mode** (operationMode=1) and **level-colors** (imageModificationMode=4) in
+Using **local mode** (operationMode=1) and **level-colors (here: black and lightgreen)** with (imageModificationMode=4)
 
 ![updWallp_l](https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode4.png)
 
@@ -83,21 +83,19 @@ installationPath="/home/username/path/to/updWallpFolder"
 ```
 
 #### Define operationMode variable
-You need to set the operation mode to either local or remote
-
+You need to set the operation mode to either **local (1)** or **remote (2)**
 
 Change
 ```bash
 operationMode=""
 ```
 
-to something like this
+to something like this (for local mode)
 ```bash
 operationMode="1"
 ```
 
 and in case of **local mode** you have to define the local image source folder as well
-
 
 Change
 ```bash

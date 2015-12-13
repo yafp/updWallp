@@ -52,39 +52,31 @@ if [ -f $currentPath/config.sh ]; then # found config file
 				;;
 
 			"")
-				# seems like script should do some actual work .... check operationMode
 				checkOperatingSystem                         # check operating system
-				checkImageMagick                             # function to check if ImageMagick is installed
+				checkRequirements                             # function to check for all required packages
 
-				if [ "$operationMode" = "1" ] || [ "$operationMode" = "2" ] ; then # if operationMode is valid
 
-					# if configured to local mode
-					if [ "$operationMode" = "1" ]; then
-						printf "${bold}${green}OK${normal}\tUsing local-mode (-l)\n"
-						checkImageSourceFolder
-					fi
 
-					# if configured to remote mode
-					if [ "$operationMode" = "2" ]; then
-						printf "${bold}${green}OK${normal}\tUsing remote-mode (-r)\n"
-						checkRemoteRequirements
-						getRemoteMuzeiImage
-					fi
+				# if configured to local mode
+				if [ "$operationMode" = "1" ]; then
+					getNewRandomLocalFilePath
+				fi
 
-					generateNewWallpaper                         # generates a new wallpaper
-					setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
-					cleanupUpdWallpDir                           # Cleaning up
-					exit 0 										# exit with success-message
+				# if configured to remote mode
+				if [ "$operationMode" = "2" ]; then
+					getRemoteMuzeiImage
+				fi
 
-				else
-					printf "${bold}${red}ERROR${normal}\tInvalid operationMode ($operationMode) in ${underline}config.sh${normal}. Check config.sh.\n"
-					exit 99
-				fi # check if operationMode is valid or not
+				generateNewWallpaper                         # generates a new wallpaper
+				setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
+				cleanupUpdWallpDir                           # Cleaning up
+				exit 0 										# exit with success-message
 				;;
 
 			*)
 				printf "$error04"
 				exit 4
+				;;
 		esac
 
 	else # = updWallp directory is not set or not valid

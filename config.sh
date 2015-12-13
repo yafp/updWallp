@@ -29,7 +29,7 @@ installationPath=""
 #
 #       example:    operationMode="1"
 # ---------------------------------------------------------------------
-operationMode="1"
+operationMode="2"
 
 # localImageFolder defines the path to the local image source
 # must be defined for local-mode
@@ -93,7 +93,7 @@ levelColorsCommand="+level-colors Black,LightGreen"  # level-colors: 1 or 2 colo
 # 5. RESIZE/SCALE TO WIDTH (OPTIONAL)
 #       if enabled updWallp scales the created image down to the user-defined with
 # ---------------------------------------------------------------------
-enableScaleToWidth=false
+enableScaleToWidth=true
 imageWidth="1920" # px width for output
 
 
@@ -122,7 +122,7 @@ addAppLabelOnGeneratedWallpaper=false 	# true or false
 #       if enabled - updWallp will display desktop notifications using notify-send
 #       annoying if updWallp.sh is used in short cycles
 # ---------------------------------------------------------------------
-enableNotifications=false                            # true or false
+enableNotifications=true                            # true or false
 notifyPath="/usr/bin/notify-send"                    # defines the path to notify-send which is used to display desktop notifications
 
 
