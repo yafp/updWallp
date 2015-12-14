@@ -69,21 +69,8 @@ Keep in mind that all parameters are changeable.
 Downloads the latest build from [here](https://github.com/yafp/updWallp/archive/master.zip).
 
 ### Configuration (config.sh)
-#### Define installationPath variable
-As initial step you have to define the installation directory in the main configuration script **config.sh**.
-
-Change
-```bash
-installationPath=""
-```
-
-to something like this
-```bash
-installationPath="/home/username/path/to/updWallpFolder"
-```
-
 #### Define operationMode variable
-You need to set the operation mode to either **local (1)** or **remote (2)**
+You need to set the **operation mode** to either **local (1)** or **remote (2)**
 
 Change
 ```bash

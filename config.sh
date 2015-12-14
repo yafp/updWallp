@@ -15,15 +15,7 @@
 
 
 # ---------------------------------------------------------------------
-# 1. INSTALLATIONPATH (mission-critical)
-#       example: installationPath="/home/username/updWallp"
-# ---------------------------------------------------------------------
-installationPath=""
-
-
-
-# ---------------------------------------------------------------------
-# 2. OPERATION-MIDE
+# 1. OPERATION-MIDE
 #       1 = local mode
 #       2 = remote mode (muzei)
 #
@@ -37,8 +29,9 @@ localImageFolder=""
 
 
 
+
 # ---------------------------------------------------------------------
-# 3. IMAGEMAGICK RELATED
+# 2. IMAGEMAGICK RELATED
 #       images get blured and dimmed - thats the core-function of this project
 #       feel free to modify the blur and dim commands
 #       empty commands result in no change to the image ;)
@@ -65,7 +58,7 @@ dimCommand="-brightness-contrast -10x5"
 
 
 # ---------------------------------------------------------------------
-# 4. IMAGE-MODIFICATIONS-MODES
+# 3. IMAGE-MODIFICATIONS-MODES
 #       0 = normal (no changes)
 #       1 = grayscale
 #       2 = sepia
@@ -90,7 +83,7 @@ levelColorsCommand="+level-colors Black,LightGreen"  # level-colors: 1 or 2 colo
 
 
 # ---------------------------------------------------------------------
-# 5. RESIZE/SCALE TO WIDTH (OPTIONAL)
+# 4. RESIZE/SCALE TO WIDTH (OPTIONAL)
 #       if enabled updWallp scales the created image down to the user-defined with
 # ---------------------------------------------------------------------
 enableScaleToWidth=true
@@ -100,7 +93,7 @@ imageWidth="1920" # px width for output
 
 
 # ---------------------------------------------------------------------
-# 6. PORTRAIT VS LANDSCAPE (OPTIONAL)
+# 5. PORTRAIT VS LANDSCAPE (OPTIONAL)
 #       if enabled (true) updWallp tries to use only landscape images from the user-supplied folder in local-mode
 # ---------------------------------------------------------------------
 useOnlyLandscapeImages=true # true or false
@@ -109,7 +102,7 @@ useOnlyLandscapeImages=true # true or false
 
 
 # ---------------------------------------------------------------------
-# 7. ADD-LABEL-TO-WALLPAPER (OPTIONAL)
+# 6. ADD-LABEL-TO-WALLPAPER (OPTIONAL)
 #       if enabled - adds a 'created-with-updwallp-label to the image
 # ---------------------------------------------------------------------
 addAppLabelOnGeneratedWallpaper=false 	# true or false
@@ -118,18 +111,18 @@ addAppLabelOnGeneratedWallpaper=false 	# true or false
 
 
 # ---------------------------------------------------------------------
-# 8. NOTIFICATION RELATED
+# 7. NOTIFICATION RELATED
 #       if enabled - updWallp will display desktop notifications using notify-send
 #       annoying if updWallp.sh is used in short cycles
 # ---------------------------------------------------------------------
-enableNotifications=true                            # true or false
+enableNotifications=false                            # true or false
 notifyPath="/usr/bin/notify-send"                    # defines the path to notify-send which is used to display desktop notifications
 
 
 
 
 # ---------------------------------------------------------------------
-# 9. LOGGING MODE (logging is only used in updWallp.sh)
+# 8. LOGGING MODE (logging is only used in updWallp.sh)
 #       0 = no logging (default)
 #       1 = syslog
 #       2 = individual log in project folder

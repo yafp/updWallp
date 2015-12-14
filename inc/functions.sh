@@ -25,75 +25,6 @@ function startUp()
 
 
 # ---------------------------------------------------------------------
-# Name:         validateConfig
-# Function:     Checks the content of config.sh
-# Mode:         local and remote
-# ---------------------------------------------------------------------
-function validateConfig()
-{
-    printf "${bold}Config validation ...${normal}\n"
-
-    # check installationPath
-    #
-    if [ -z "$installationPath" ]; then
-        printf "${bold}${red}ERROR${normal}\tMisconfigured installation path (installationPath in config.sh is unset). Exiting (errno 2).\n"
-        exit 2
-    else
-        if [ -d "$installationPath" ]; then
-            printf "${bold}${green}OK${normal}\tInstallation path is valid: $installationPath\n"
-        else
-            printf "${bold}${red}ERROR${normal}\tMisconfigured installation path (installationPath in config.sh). Exiting (errno 2).\n"
-            exit 2
-        fi
-    fi
-
-
-    # check operation mode
-    #
-    if [ -z "$operationMode" ]; then
-        printf "${bold}${red}ERROR${normal}\tMisconfigured operation mode (operationMode in config.sh is unset). Exiting (errno 99).\n"
-        exit 99
-    else
-        if [ "$operationMode" = "1" ] || [ "$operationMode" = "2" ] ; then
-            printf "${bold}${green}OK${normal}\tOperation mode: $operationMode\n"
-
-            if [ "$operationMode" = "1" ]; then
-                if [ -z "$localImageFolder" ]; then
-                    printf "${bold}${red}ERROR${normal}\tMisconfigured local image folder (localImageFolder in config.sh is unset). Exiting (errno 99).\n"
-                    exit 99
-                else
-                    if [ -d "$localImageFolder" ]; then
-                        printf "${bold}${green}OK${normal}\tLocal image folder: $localImageFolder\n"
-                    else
-                        printf "${bold}${red}ERROR${normal}\tMisconfigured local image folder (localImageFolder in config.sh is not valid). Exiting (errno 99).\n"
-                        exit 99
-                    fi
-                fi
-            fi
-        else
-            printf "${bold}${red}ERROR${normal}\tMisconfigured operation mode (operationMode in config.sh). Exiting (errno 99).\n"
-            exit 99
-        fi
-    fi
-
-    # check modification mode
-    if [ -z "$imageModificationMode" ]; then
-        printf "${bold}${red}ERROR${normal}\tMisconfigured modification mode (imageModificationMode in config.sh is unset). Exiting (errno 99).\n"
-        exit 99
-    else
-        if [ "$imageModificationMode" = "0" ] || [ "$imageModificationMode" = "1" ] || [ "$imageModificationMode" = "2" ] || [ "$imageModificationMode" = "3" ] || [ "$imageModificationMode" = "4" ] ; then
-            printf "${bold}${green}OK${normal}\tModification mode: $imageModificationMode\n"
-        fi
-    fi
-
-    printf "${bold}${green}OK${normal}\tFinished config validation. Everything looks fine.\n\n"
-    printf "${bold}Image handling ...${normal}\n"
-}
-
-
-
-
-# ---------------------------------------------------------------------
 # Name:         checkOperatingSystem
 # Function:     Checks if script is executored on a linux system
 # Mode:
@@ -101,20 +32,82 @@ function validateConfig()
 function checkOperatingSystem()
 {
     if [[ $OSTYPE = *linux* ]]; then # we are on linux - so continue checking
-        validateConfig # valide the mission critical config values
-        logWallp "Config validation passed."
 
+        # try to detect desktop environment
+        printf "\n${bold}Detecting desktop environment ...${normal}\n"
+        linuxSession=$DESKTOP_SESSION
+        if [[ $linuxSession == *"gnome"* ]]; then
+            printfWallp "1" "Detected $linuxSession environment (tested)"
+        else
+            printfWallp "2" "Detected $linuxSession environment (experimental)"
+        fi
         checkResolution # Check which desktop environment is in use
-        logWallp "Detected supported operating system."
+
+        validateConfig # valide the mission critical config values
+
 
     else # not linux -> not supported
-        printf "${bold}${red}ERROR${normal}\tUnexpected operating system: $OSTYPE. Exiting (errorcode 99).\n"
-        logWallp "Detected unsupported operating system. Exiting (errorcode 99)."
+        printfWallp "3" "Unexpected operating system: $OSTYPE. Exiting (errno 99)."
         exit 99
     fi
-
-
 }
+
+
+
+# ---------------------------------------------------------------------
+# Name:         validateConfig
+# Function:     Checks the content of config.sh
+# Mode:         local and remote
+# ---------------------------------------------------------------------
+function validateConfig()
+{
+    printf "\n${bold}Config validation ...${normal}\n"
+
+    # check operation mode
+    #
+    if [ -z "$operationMode" ]; then
+        printfWallp "3" "Misconfigured operation mode (operationMode in config.sh is unset). Exiting (errno 99)."
+        exit 99
+    else
+        if [ "$operationMode" = "1" ] || [ "$operationMode" = "2" ] ; then
+            printfWallp "1" "Operation mode: $operationMode"
+            if [ "$operationMode" = "1" ]; then
+                if [ -z "$localImageFolder" ]; then
+                    printfWallp "3" "Misconfigured local image folder (localImageFolder in config.sh is unset). Exiting (errno 99)."
+                    exit 99
+                else
+                    if [ -d "$localImageFolder" ]; then
+                        printfWallp "1" "Local image folder: $localImageFolder"
+                    else
+                        printfWallp "3" "Misconfigured local image folder (localImageFolder in config.sh is not valid). Exiting (errno 99)."
+                        exit 99
+                    fi
+                fi
+            fi
+        else
+            printfWallp "3" "Misconfigured operation mode (operationMode in config.sh). Exiting (errno 99)."
+            exit 99
+        fi
+    fi
+
+    # check modification mode
+    if [ -z "$imageModificationMode" ]; then
+        printfWallp "3" "Misconfigured modification mode (imageModificationMode in config.sh is unset). Exiting (errno 99)."
+        exit 99
+    else
+        if [ "$imageModificationMode" = "0" ] || [ "$imageModificationMode" = "1" ] || [ "$imageModificationMode" = "2" ] || [ "$imageModificationMode" = "3" ] || [ "$imageModificationMode" = "4" ] ; then
+            printfWallp "1" "Modification mode: $imageModificationMode"
+        fi
+    fi
+
+    printfWallp "1" "Finished config validation. Everything looks fine."
+    printf "\n${bold}Image handling ...${normal}\n"
+}
+
+
+
+
+
 
 
 
@@ -129,7 +122,7 @@ function checkResolution()
     # might be wrong on multi-desktop systems
 	if hash xdpyinfo 2>/dev/null; then
 		displayResolution=$(xdpyinfo  | grep dimensions)
-		printf "${bold}${green}OK${normal}\tDisplay $displayResolution\n"
+        printfWallp "1" "Display$displayResolution"
 	fi
 }
 
@@ -149,13 +142,9 @@ function checkRequirements()
     # ImageMagick - needed in general
     #
     if hash convert 2>/dev/null; then
-        message="Found ImageMagick (required)"
-        logWallp "$message"
-        #printf "${bold}${green}OK${normal}\t$message\n"
+        logWallp "Found ImageMagick (required)"
     else
-        message="ImageMagick not found. Exiting (errorcode 99)."
-        logWallp "$message"
-        printf "${bold}${red}ERROR${normal}\t$message\n"
+        printfWallp "3" "ImageMagick not found. Exiting (errno 99)."
         exit 99
     fi
 
@@ -163,24 +152,16 @@ function checkRequirements()
     #
     if [ "$operationMode" = "2" ]; then
         if hash curl 2>/dev/null; then # check for curl
-            message="Found cURL (required for remote-mode)"
-            logWallp "$message"
-            printf "${bold}${green}OK${normal}\t$message\n"
+            logWallp "Found cURL (required for remote-mode)"
         else
-            message="cURL not found (required for remote-mode). Exiting (errorcode 99)."
-            logWallp "$message"
-            printf "${bold}${red}ERROR${normal}\t$message\n"
+            printfWallp "3" "cURL not found (required for remote-mode). Exiting (errno 99)."
             exit 99
         fi
 
         if hash jq 2>/dev/null; then # check for jq
-            message="Found JQ (required for remote-mode)"
-            logWallp "$message"
-            printf "${bold}${green}OK${normal}\t$message\n"
+            logWallp "Found JQ (required for remote-mode)"
         else
-            message="JQ not found (required for remote-mode). Exiting (errorcode 99)."
-            logWallp "$message"
-            printf "${bold}${red}ERROR${normal}\t$message\n"
+            printfWallp "3" "JQ not found (required for remote-mode). Exiting (errno 99)."
             exit 99
         fi
     fi
@@ -196,7 +177,7 @@ function checkRequirements()
 function displayNotification() {
     # If notifications are enabled at all &  if notify-send exists
     if [ "$enableNotifications" = true ] && [ -f $notifyPath ]; then
-        $notifyPath "$1" "$2" -i "$installationPath/img/appIcon_128px.png"
+        $notifyPath "$1" "$2" -i "$projectPath/img/appIcon_128px.png"
     fi
 }
 
@@ -211,43 +192,33 @@ function getRemoteMuzeiImage()
 {
     if ! [ -f ./muzeich.json ]; then
         curl -o muzeich.json 'https://muzeiapi.appspot.com/featured?cachebust=1'
-        message="Downloaded muzei.json (initial)."
-        logWallp "$message"
-        printf "${bold}${green}OK${normal}\t$message\n"
+        printfWallp "1" "Downloaded muzei.json (initial)."
     else
-       curl -o muzeich2.json 'https://muzeiapi.appspot.com/featured?cachebust=1'
-        message="Downloaded muzei.json (checking for changes)."
-        logWallp "$message"
-        printf "${bold}${green}OK${normal}\t$message\n"
+        curl -o muzeich2.json 'https://muzeiapi.appspot.com/featured?cachebust=1'
+        printfWallp "1" "Downloaded muzei.json (checking for changes)."
         # there is a new muzei image available
         if [ "$(cmp muzeich.json muzeich2.json)" ]; then
-          mv muzeich2.json muzeich.json
-            message="There is a new Muzei image available. Loading it."
-            logWallp "$message"
-            printf "${bold}${green}OK${normal}\t$message\n"
+            mv muzeich2.json muzeich.json
+            printfWallp "1" "There is a new Muzei image available. Loading it."
         else # muzei offers still the same image
             rm muzeich2.json # remove the second json file
-            message="There is no new Muzei image available. Nothing to do here."
-            logWallp "$message"
-            printf "${bold}${green}OK${normal}\t$message\n"
+            printfWallp "1" "There is no new Muzei image available. Nothing to do here."
             exit
         fi
     fi
 
     # parse the Muzei JSON to extract the new image url
-    imageUri=`jq '.imageUri' $installationPath/muzeich.json | sed s/\"//g`
+    imageUri=`jq '.imageUri' $projectPath/muzeich.json | sed s/\"//g`
     imageFile=`basename $imageUri`
-    title=`jq '.title' $installationPath/muzeich.json | sed s/\"//g`
-    byline=`jq '.byline' $installationPath/muzeich.json | sed s/\"//g`
+    title=`jq '.title' $projectPath/muzeich.json | sed s/\"//g`
+    byline=`jq '.byline' $projectPath/muzeich.json | sed s/\"//g`
 
     echo "File $imageFile does not exist, downloading..."
     curl -O $imageUri
     convert $imageFile $muzeiFilename
-    newImage=$installationPath/$muzeiFilename
+    newImage=$projectPath/$muzeiFilename
 
-    message="Finished getting latest Muzei image."
-    logWallp "$message"
-    printf "${bold}${green}OK${normal}\t$message\n"
+    printfWallp "1" "Finished getting latest Muzei image."
 }
 
 
@@ -270,19 +241,14 @@ function getNewRandomLocalFilePath()
             curImageHeight=$(identify -ping -format %H "$newImage")
 
             if [ "$curImageHeight" -gt "$curImageWidth" ]; then
-                #printf "${bold}${green}OK${normal}\tRandom pick was in landscape-mode - continue\n"
-            #else
-                printf "${bold}${yellow}WARNING${normal}\tRandom pick was in portrait-mode - repick\n"
-                getNewRandomLocalFilePath
+                printfWallp "2" "Random pick was in portrait-mode - repick"
                 return
             fi
         fi
 
-        logWallp "Random image: $newImage"
-        printf "${bold}${green}OK${normal}\tRandom image: ${underline}$newImage${normal}\n"
+        printfWallp "1" "Random image: $newImage"
     else
-        logWallp "Random file ($newImage) was not an image. Exiting (errorcode 88)."
-        printf "${bold}${red}ERROR${normal}\tRandom file ($newImage) was not an image. Exiting (errorcode 88).\n"
+        printfWallp "3" "Random file ($newImage) was not an image. Exiting (errno 88)."
         exit 88
     fi
 }
@@ -299,36 +265,36 @@ function getNewRandomLocalFilePath()
 function generateNewWallpaper()
 {
     convert "$newImage" $backupFilename                               # copy random base image to project folder (using convert to ensure its always a png)
-    printf "${bold}${green}OK${normal}\tFinished mirroring source image to ${underline}$installationPath/$backupFilename${normal}\n"
+    printf "${bold}${green}OK${normal}\tFinished mirroring source image to $projectPath/$backupFilename\n"
 
 	case "$imageModificationMode" in
 
          # 0 = normal-mode
 		0)  convert "$newImage" $blurCommand $dimCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-			printf "${bold}${green}OK${normal}\tGenerated the new plain wallpaper in ${underline}$installationPath/$outputFilename${normal}\n"
+            printfWallp "1" "Generated the new plain wallpaper in $projectPath/$outputFilename"
     		;;
 
         # 1 = grayscale
 		1)  convert "$newImage" $blurCommand $dimCommand $grayscaleCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-   		    printf "${bold}${green}OK${normal}\tGenerated the new grayscaled wallpaper in ${underline}$installationPath/$outputFilename${normal}\n"
+            printfWallp "1" "Generated the new grayscaled wallpaper in $projectPath/$outputFilename"
             ;;
 
         # 2 = sepia-mode
 		2)  convert "$newImage" $blurCommand $dimCommand $sepiaCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-			printf "${bold}${green}OK${normal}\tGenerated the new sepia wallpaper in ${underline}$installationPath/$outputFilename${normal}\n"
+            printfWallp "1" "Generated the new sepia wallpaper in $projectPath/$outputFilename"
     		;;
 
         # 3 = colorize
    		3)  convert "$newImage" $blurCommand $dimCommand $colorizeCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-   			printf "${bold}${green}OK${normal}\tGenerated the new colorized wallpaper in ${underline}$installationPath/$outputFilename${normal}\n"
+            printfWallp "1" "Generated the new colorized wallpaper in $projectPath/$outputFilename"
        		;;
 
         # 4 = levelColors
         4)  convert "$newImage" $blurCommand $dimCommand $levelColorsCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-            printf "${bold}${green}OK${normal}\tGenerated the new level-colors wallpaper in ${underline}$installationPath/$outputFilename${normal}\n"
+            printfWallp "1" "Generated the new level-colors wallpaper in $projectPath/$outputFilename"
             ;;
 
-		*)  printf "${bold}${red}ERROR${normal}\tImage modification mode is set to ${underline}$imageModificationMode${normal} which isnt correct. Aborting\n"
+		*)  printfWallp "3" "Image modification mode is set to $imageModificationMode which isn't correct. Exiting (errno 99)"
 			exit 99
    			;;
 	esac
@@ -336,15 +302,13 @@ function generateNewWallpaper()
     # scale image to user-defined with if configured in config.sh
     if [ "$enableScaleToWidth" = true ]; then
         convert $workInProgess -thumbnail $imageWidth $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
-        printf "${bold}${green}OK${normal}\tScaled image to defined width of ${underline}$imageWidth${normal} pixel.\n"
+        printfWallp "1" "Scaled image to defined width of $imageWidth pixel."
     fi
 
     # Add Label if configured (testing)
     if [ "$addAppLabelOnGeneratedWallpaper" = true ] ; then
-        #imageDimensions=$(identify -size geometry)
-        #printf "$imageDimensions\n"
         composite -geometry  +0+1200 "img/appLabel_150x40px.png" $workInProgess $workInProgess
-        printf "${bold}${green}OK${normal}\tAdded app-label to ${underline}$installationPath/$outputFilename${normal}\n"
+        printfWallp "1" "Added app-label to $projectPath/$outputFilename"
     fi
 
     # image creation is done - rename work-in-progress-file to final filename for new wallpaper
@@ -352,7 +316,7 @@ function generateNewWallpaper()
     # -> avoids flickering while script-execution
     convert $workInProgess $outputFilename
 
-    printf "${bold}${green}OK${normal}\tFinished image processing\n\n"
+    printfWallp "1" "Finished image processing"
     return
 }
 
@@ -365,45 +329,38 @@ function generateNewWallpaper()
 # ---------------------------------------------------------------------
 function setLinuxWallpaper() {
 
-    printf "${bold}Updating wallpaper ...${normal}\n"
+    printf "\n${bold}Updating wallpaper ...${normal}\n"
 
     # gnome-settings-daemon
     if [ "$(pidof gnome-settings-daemon)" ]; then
-        /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$installationPath/$1
+        /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://$projectPath/$1
         message="Wallpaper updated (using gsettings/gnome-settings-daemon)"
         displayNotification "$appName" "$message"
-        logWallp "$message"
-        printf "${bold}${green}OK${normal}\t$message\n\n"
+        printfWallp "1" "$message"
         return
     fi
 
     # gconftool2
     if hash gconftool-2 2>/dev/null; then
-        gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $installationPath/$1
-        displayNotification "$appName" "Wallpaper updated (using gconftool2)"
+        gconftool-2 --type=string --set /desktop/gnome/background/picture_filename $projectPath/$1
         message="Wallpaper updated (using gconftool2)"
-        logWallp "$message"
-        printf "${bold}${green}OK${normal}\t$message\n\n"
+        displayNotification "$appName" "$message"
+        printfWallp "1" "$message"
         return
     fi
 
     # feh
     if hash feh 2>/dev/null; then
-        printf "${bold}${yellow}WARNING${normal}\tDetected feh (experimental)\n"
-        feh --bg-max $installationPath/$1
-        message="Wallpaper updated (using feh)"
-        logWallp "$message"
-        printf "${bold}${green}OK${normal}\t$message\n\n"
+        feh --bg-max $projectPath/$1
+        message="Trying to set wallpaper (using feh - experimental)"
+        displayNotification "$appName" "$message"
+        printfWallp "2" "$message"
         return
     fi
 
-    message="No supported desktop environment detected."
-    logWallp "$message"
-
-    printf "${bold}${red}ERROR${normal}\tSorry but $appName was most likely unable to set your wallpaper.\n"
-    printf "${bold}${red}ERROR${normal}\tCurrently only gnome-settings-daemon, gconftool2 and feh are supported methods to set the walpaper\n"
-    printf "${bold}${red}ERROR${normal}\tNone of them were detected on your system.\n"
-    printf "${bold}${red}ERROR${normal}\tMore: ${underline}$appDocURL/Supported-Desktop-Environments${normal}. Exiting (errorcode 99).\n"
+    printfWallp "3" "Found no method to update wallpaper"
+    printfWallp "3" "Currently only gnome-settings-daemon, gconftool2 and feh (experimental) are supported methods to set the walpaper"
+    printfWallp "3" "More: $appDocURL/Supported-Desktop-Environments. Exiting (errno 99)."
     exit 99
 }
 
@@ -474,12 +431,12 @@ function logWallp()
 
       2)
         # self-written logging method
-        printf "$timestamp\t\t$1\n" >> "$installationPath/logs/updWallpLog.txt"
+        printf "$timestamp\t\t$1\n" >> "$projectPath/logs/updWallpLog.txt"
         return
         ;;
 
       *)
-        printf "${bold}${yellow}WARNING${normal}\tYou have misconfigured ${underline}loggingMode${normal} in config.sh with an value of: ${underline}$loggingMode${normal}.\n"
+        printf "${bold}${yellow}WARNING${normal}\tYou have misconfigured loggingMode in config.sh with an value of: $loggingMode.\n"
         return
         ;;
    esac
@@ -514,7 +471,11 @@ function printfWallp()
     esac
 
     printf "$messageHead"
-    printf "$messageText"
+    printf "$messageText\n"
+
+
+    # now trigger logging with the messageText
+    logWallp "$messageText"
 }
 
 
@@ -525,7 +486,7 @@ function printfWallp()
 # ---------------------------------------------------------------------
 function cleanupUpdWallpDir()
 {
-    printf "${bold}Post-processing ...${normal}\n"
+    printf "\n${bold}Post-processing ...${normal}\n"
 
     if [ -f "$imageFile" ]; then
         rm $imageFile # from remote mode: org muzei name with org name
@@ -535,9 +496,5 @@ function cleanupUpdWallpDir()
         rm $workInProgess
     fi
 
-    printf "${bold}${green}OK${normal}\tFinished cleaning up ${underline}$installationPath${normal}. Goodbye\n"
-    #printfWallp "1" "Finished cleaning up."
-
-    logWallp "Finished cleaning up."
-    logWallp "updWallp says goodbye.\n\n"
+    printfWallp "1" "Finished cleaning up $projectPath\n\n"
 }
