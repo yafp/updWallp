@@ -10,10 +10,9 @@
 # ---------------------------------------------------------------------
 # Name:         startUp
 # Function:     Prints the output header
-# Mode:
+# Mode:         local & remote
 # ---------------------------------------------------------------------
-function startUp()
-{
+function startUp() {
     printf "##########################################################\n"
     printf "# ${bold}$appName - $appSubTitle ${normal}\n"
     printf "##########################################################\n\n"
@@ -27,22 +26,22 @@ function startUp()
 # ---------------------------------------------------------------------
 # Name:         checkOperatingSystem
 # Function:     Checks if script is executored on a linux system
-# Mode:
+# Mode:         local & remote
 # ---------------------------------------------------------------------
-function checkOperatingSystem()
-{
+function checkOperatingSystem() {
     if [[ $OSTYPE = *linux* ]]; then # we are on linux - so continue checking
 
-        # try to detect desktop environment
         printf "\n${bold}Detecting desktop environment ...${normal}\n"
+
+        # try to detect desktop environment
         linuxSession=$DESKTOP_SESSION
         if [[ $linuxSession == *"gnome"* ]]; then
             printfWallp "1" "Detected $linuxSession environment (tested)"
         else
             printfWallp "2" "Detected $linuxSession environment (experimental)"
         fi
-        checkResolution # Check which desktop environment is in use
 
+        checkResolution     # Check which desktop environment is in use
         validateConfig # valide the mission critical config values
 
 
@@ -55,44 +54,57 @@ function checkOperatingSystem()
 
 
 # ---------------------------------------------------------------------
-# Name:         validateConfig
-# Function:     Checks the content of config.sh
-# Mode:         local and remote
+# Name:         checkResolution
+# Function:     Checking the resolution
+# Mode:         local & remote
 # ---------------------------------------------------------------------
-function validateConfig()
-{
+function checkResolution() {
+	# output display-dimensions if possible - might be wrong on multi-desktop systems
+	if hash xdpyinfo 2>/dev/null; then
+		displayResolution=$(xdpyinfo  | grep dimensions)
+        printfWallp "1" "Display$displayResolution"
+	fi
+}
+
+
+
+# ---------------------------------------------------------------------
+# Name:         validateConfig
+# Function:     validates the content of config.sh (mission critical)
+# Mode:         local &remote
+# ---------------------------------------------------------------------
+function validateConfig() {
     printf "\n${bold}Config validation ...${normal}\n"
 
     # check operation mode
-    #
     if [ -z "$operationMode" ]; then
-        printfWallp "3" "Misconfigured operation mode (operationMode in config.sh is unset). Exiting (errno 99)."
+        printfWallp "3" "Undefined operation mode (operationMode) in config.sh. Exiting (errno 99)."
         exit 99
     else
         if [ "$operationMode" = "1" ] || [ "$operationMode" = "2" ] ; then
             printfWallp "1" "Operation mode: $operationMode"
-            if [ "$operationMode" = "1" ]; then
+            if [ "$operationMode" = "1" ]; then # if operation mode = 1 -> user need to define an image folder aswell
                 if [ -z "$localImageFolder" ]; then
-                    printfWallp "3" "Misconfigured local image folder (localImageFolder in config.sh is unset). Exiting (errno 99)."
+                    printfWallp "3" "Undefined local image folder (localImageFolder) in config.sh. Exiting (errno 99)."
                     exit 99
                 else
                     if [ -d "$localImageFolder" ]; then
                         printfWallp "1" "Local image folder: $localImageFolder"
                     else
-                        printfWallp "3" "Misconfigured local image folder (localImageFolder in config.sh is not valid). Exiting (errno 99)."
+                        printfWallp "3" "Misconfigured local image folder (localImageFolder) in config.sh. Exiting (errno 99)."
                         exit 99
                     fi
                 fi
             fi
         else
-            printfWallp "3" "Misconfigured operation mode (operationMode in config.sh). Exiting (errno 99)."
+            printfWallp "3" "Misconfigured operation mode (operationMode) in config.sh. Is set to $operationMode. Exiting (errno 99)."
             exit 99
         fi
     fi
 
     # check modification mode
     if [ -z "$imageModificationMode" ]; then
-        printfWallp "3" "Misconfigured modification mode (imageModificationMode in config.sh is unset). Exiting (errno 99)."
+        printfWallp "3" "Undefined modification mode (imageModificationMode) in config.sh. Exiting (errno 99)."
         exit 99
     else
         if [ "$imageModificationMode" = "0" ] || [ "$imageModificationMode" = "1" ] || [ "$imageModificationMode" = "2" ] || [ "$imageModificationMode" = "3" ] || [ "$imageModificationMode" = "4" ] ; then
@@ -106,39 +118,15 @@ function validateConfig()
 
 
 
-
-
-
-
-
-# ---------------------------------------------------------------------
-# Name:             checkResolution
-# Function:         Checking the resolution
-# Mode:
-# ---------------------------------------------------------------------
-function checkResolution()
-{
-	# output display-dimensions if possible
-    # might be wrong on multi-desktop systems
-	if hash xdpyinfo 2>/dev/null; then
-		displayResolution=$(xdpyinfo  | grep dimensions)
-        printfWallp "1" "Display$displayResolution"
-	fi
-}
-
-
-
-
 # ---------------------------------------------------------------------
 # Name:             checkRequirements
-# Function:         Check the package requirements
+# Function:         Check the requirements
 #                   - imageMagick
 #                   - cURL (for remote mode aka muzei mode)
 #                   - jq (for remote mode aka muzei mode)
 # Mode:             local & remote
 # ---------------------------------------------------------------------
-function checkRequirements()
-{
+function checkRequirements() {
     # ImageMagick - needed in general
     #
     if hash convert 2>/dev/null; then
@@ -164,7 +152,7 @@ function checkRequirements()
             printfWallp "3" "JQ not found (required for remote-mode). Exiting (errno 99)."
             exit 99
         fi
-    fi
+    fi # end of remote-mode specific checks
 }
 
 
@@ -175,7 +163,6 @@ function checkRequirements()
 # Mode:             local & remote
 # ---------------------------------------------------------------------
 function displayNotification() {
-    # If notifications are enabled at all &  if notify-send exists
     if [ "$enableNotifications" = true ] && [ -f $notifyPath ]; then
         $notifyPath "$1" "$2" -i "$projectPath/img/appIcon_128px.png"
     fi
@@ -188,8 +175,7 @@ function displayNotification() {
 # Function          Checks for latest muzei image and fetches it if needed
 # Mode:             remote
 # ---------------------------------------------------------------------
-function getRemoteMuzeiImage()
-{
+function getRemoteMuzeiImage() {
     if ! [ -f ./muzeich.json ]; then
         curl -o muzeich.json 'https://muzeiapi.appspot.com/featured?cachebust=1'
         printfWallp "1" "Downloaded muzei.json (initial)."
@@ -229,23 +215,18 @@ function getRemoteMuzeiImage()
 # Function:         Picks a random image from the local folder
 # Mode:             local
 # ---------------------------------------------------------------------
-function getNewRandomLocalFilePath()
-{
+function getNewRandomLocalFilePath() {
     newImage=$(find $localImageFolder -type f \( -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.JPEG' -o -name '*.png' -o -name '*.PNG' \) | shuf -n 1)
 
     if ! [ -f "$localImageFolder/$newImage" ]; then # check if random picked file exists
-
-        # if only landscape images should be used
-        if [ "$useOnlyLandscapeImages" = true ]; then
+        if [ "$useOnlyLandscapeImages" = true ]; then # if only landscape images should be used
             curImageWidth=$(identify -ping -format %W "$newImage")
             curImageHeight=$(identify -ping -format %H "$newImage")
-
             if [ "$curImageHeight" -gt "$curImageWidth" ]; then
                 printfWallp "2" "Random pick was in portrait-mode - repick"
                 return
             fi
         fi
-
         printfWallp "1" "Random image: $newImage"
     else
         printfWallp "3" "Random file ($newImage) was not an image. Exiting (errno 88)."
@@ -255,21 +236,18 @@ function getNewRandomLocalFilePath()
 
 
 
-
-
 # ---------------------------------------------------------------------
 # Name:             generateNewWallpaper
 # Function:         generates the new wallpaper in the project folder
 # Mode:             local & remote
 # ---------------------------------------------------------------------
-function generateNewWallpaper()
-{
+function generateNewWallpaper() {
     convert "$newImage" $backupFilename                               # copy random base image to project folder (using convert to ensure its always a png)
-    printf "${bold}${green}OK${normal}\tFinished mirroring source image to $projectPath/$backupFilename\n"
+    printWallp "1" "Finished mirroring source image to $projectPath/$backupFilename"
 
 	case "$imageModificationMode" in
 
-         # 0 = normal-mode
+        # 0 = normal-mode
 		0)  convert "$newImage" $blurCommand $dimCommand  $workInProgess     # Create a dimmed & blur-verion of the image into the working dir
             printfWallp "1" "Generated the new plain wallpaper in $projectPath/$outputFilename"
     		;;
@@ -360,20 +338,19 @@ function setLinuxWallpaper() {
 
     printfWallp "3" "Found no method to update wallpaper"
     printfWallp "3" "Currently only gnome-settings-daemon, gconftool2 and feh (experimental) are supported methods to set the walpaper"
+    printfWallp "3" "Please report the issue on Github ($appIssueURL) and your system-details (distribution, desktop-environment etc..) to help us improve $appName\n"
     printfWallp "3" "More: $appDocURL/Supported-Desktop-Environments. Exiting (errno 99)."
     exit 99
 }
 
 
 
-
 # ---------------------------------------------------------------------
 # Name:             displayAppVersion
 # Function:         Outputs the app version
-# Mode:             local and remote
+# Mode:             local & remote
 # ---------------------------------------------------------------------
-function displayAppVersion()
-{
+function displayAppVersion() {
     printf "\n${bold}Version:${normal}\n"
     printf "  $appVersion\n\n"
     printf "${bold}Documentation:${normal}\n"
@@ -386,10 +363,9 @@ function displayAppVersion()
 # ---------------------------------------------------------------------
 # Name:             displayAppHelp
 # Function:         Outputs the app help
-# Mode:             local and remote
+# Mode:             local & remote
 # ---------------------------------------------------------------------
-function displayAppHelp()
-{
+function displayAppHelp() {
     printf "\n${bold}Usage:${normal}\n"
     printf "  Mainscript:   ./updWallp.sh\n"
     printf "  Togglescript: ./updWallpShowOrg.sh\n\n"
@@ -404,15 +380,13 @@ function displayAppHelp()
 
 
 
-
 # ---------------------------------------------------------------------
 # Name:             logWallp
 # Function:         Is writing the logfile
 #                   logging mode must be configured in config.sh
-# Mode:             local and remote
+# Mode:             local & remote
 # ---------------------------------------------------------------------
-function logWallp()
-{
+function logWallp() {
     timestamp=$(date +"%Y%m%d-%T")
 
     case $loggingMode in
@@ -443,38 +417,37 @@ function logWallp()
 }
 
 
+
 # ---------------------------------------------------------------------
 # Name:             printfWallp
 # Function:         Does the output to the commandline
+# Mode:             local & remote
 # ---------------------------------------------------------------------
-function printfWallp()
-{
+function printfWallp() {
     messageType="$1"
     messageText="$2"
     messageHead=""
 
     case $messageType in
         1)
-            # ok / info
-            messageHead="${bold}${green}OK${normal}\t"
+            messageHead="${bold}${green}OK${normal}\t"              # ok / info
             ;;
 
         2)
-            # warning
-            messageHead="${bold}${yellow}WARNING${normal}\t"
+            messageHead="${bold}${yellow}WARNING${normal}\t"        # warning
             ;;
 
         3)
-            # error
-            messageHead="${bold}${red}ERROR${normal}\t"
+            messageHead="${bold}${red}ERROR${normal}\t"             # error
+            ;;
+
+        *)  printf "${bold}${red}ERROR${normal}\tInvalid usage of printfWallp(). Blame the developer."
             ;;
     esac
 
-    printf "$messageHead"
-    printf "$messageText\n"
+    printf "$messageHead $messageText\n"
 
-
-    # now trigger logging with the messageText
+    # now trigger logging with the same messageText
     logWallp "$messageText"
 }
 
@@ -483,17 +456,17 @@ function printfWallp()
 # ---------------------------------------------------------------------
 # Name:             cleanupUpdWallpDir
 # Function:         Clean the app folder at the end of the processing
+# Mode:             local & remote
 # ---------------------------------------------------------------------
-function cleanupUpdWallpDir()
-{
+function cleanupUpdWallpDir() {
     printf "\n${bold}Post-processing ...${normal}\n"
 
     if [ -f "$imageFile" ]; then
-        rm $imageFile # from remote mode: org muzei name with org name
+        rm $imageFile # from remote mode: org muzei file with org name
     fi
 
     if [ -f "$workInProgess" ];then
-        rm $workInProgess
+        rm $workInProgess #temporary file
     fi
 
     printfWallp "1" "Finished cleaning up $projectPath\n\n"

@@ -14,7 +14,7 @@
 # ---------------------------------------------------------------------
 # LOCAL CONFIG - no need to touch
 # ---------------------------------------------------------------------
-localUserImageFolder=$2
+
 
 
 
@@ -26,32 +26,22 @@ projectPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ -f $projectPath/config.sh ]; then # found config file
 	source $projectPath/config.sh # load config file
-	cd $projectPath # change to defined folder
-	source inc/loader.sh # source loader.sh
+	cd $projectPath # change to project folder
+	source inc/loader.sh # source loader.sh (all other inc files are sources in loader.sh)
 	startUp
 
-	# NEW
-	#
 	case "$primaryParameter" in
-		"-h")
+		"-h" | "--help")
 			displayAppHelp
     		;;
 
-		"--help")
-			displayAppHelp
-			;;
-
-		"-v")
+		"-v" | "--version")
 			displayAppVersion
 	    	;;
 
-		"--version")
-			displayAppVersion
-			;;
-
 		"")
-			checkOperatingSystem                         # check operating system
-			checkRequirements                             # function to check for all required packages
+			checkOperatingSystem    	# check operating system
+			checkRequirements           # function to check for all required packages
 
 			# if configured to local mode
 			if [ "$operationMode" = "1" ]; then
@@ -76,6 +66,6 @@ if [ -f $projectPath/config.sh ]; then # found config file
 	esac
 
 else # unable to load config.sh
-	printf "ERROR\tUnable to find 'config.sh'. Exiting (errorcode 1)\n"
+	printf "ERROR\tUnable to load 'config.sh'. Exiting (errno 1)\n"
 	exit 1
 fi

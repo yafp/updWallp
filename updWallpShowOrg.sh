@@ -27,21 +27,13 @@ if [ -f $projectPath/config.sh ]; then # found config file
     source inc/loader.sh # source loader.sh
 	startUp
     case "$primaryParameter" in
-		"-h")
+		"-h" | "--help")
 			displayAppHelp
     		;;
 
-		"--help")
-			displayAppHelp
-			;;
-
-		"-v")
+		"-v" | "--version")
 			displayAppVersion
     		;;
-
-		"--version")
-			displayAppVersion
-			;;
 
 		"")
             checkOperatingSystem                       # check operating system
@@ -50,7 +42,7 @@ if [ -f $projectPath/config.sh ]; then # found config file
             printf "\n${bold}Wating ...${normal}\n"
             printf "${bold}${green}OK${normal}\tWaiting for $toggleTime (seconds) until toggling back\n"
             sleep "$toggleTime"
-            
+
             setLinuxWallpaper "$outputFilename"        # set the linux wallpaper back to the dimmed/blured version
             exit 0 # exit with success
             ;;
@@ -60,6 +52,6 @@ if [ -f $projectPath/config.sh ]; then # found config file
             exit 4
     esac
 else
-    printf "ERROR\tUnable to find 'config.sh'. Exiting (errorcode 1)\n"
+    printf "ERROR\tUnable to load 'config.sh'. Exiting (errno 1)\n"
 	exit 1
 fi

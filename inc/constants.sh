@@ -11,6 +11,7 @@
 readonly appName="updWallp"                                       # AppName
 readonly appSubTitle="the wallpaper refresher"
 readonly appDocURL="https://github.com/yafp/updWallp/wiki"        # URL of project wiki
+readonly appIssueURL="https://github.com/yafp/updWallp/issues"    # issue tracker
 
 
 # FILENAMES for ImageCreation
