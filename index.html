@@ -14,30 +14,41 @@
   </head>
   <body>
     <div class="wrapper">
-      <header>
-        <h1>updWallp</h1>
-        <img src="https://raw.githubusercontent.com/yafp/updWallp/master/img/appIcon_128px.png">
-        
-        <p>bash script to generate and setup wallpapers on Linux (inspired by <a href="https://github.com/romannurik/muzei/">Muzei</a> &amp; <a href="https://github.com/aepirli/linmuzei">Muzei to Bash</a>)</p>
+      
+      
+      
+      
+<!-- Header -->      
+<header>
+<h1>updWallp</h1>
+<img src="https://raw.githubusercontent.com/yafp/updWallp/master/img/appIcon_128px.png">
+<p>bash script to generate and setup wallpapers on Linux (inspired by <a href="https://github.com/romannurik/muzei/">Muzei</a> &amp; <a href="https://github.com/aepirli/linmuzei">Muzei to Bash</a>)</p>
+<p class="view"><a href="https://github.com/yafp/updWallp">View the Project on GitHub <small>yafp/updWallp</small></a></p>
 
-        <p class="view"><a href="https://github.com/yafp/updWallp">View the Project on GitHub <small>yafp/updWallp</small></a></p>
+<ul>
+<li><a href="https://github.com/yafp/updWallp/zipball/master">Download <strong>ZIP File</strong></a></li>
+<li><a href="https://github.com/yafp/updWallp/tarball/master">Download <strong>TAR Ball</strong></a></li>
+<li><a href="https://github.com/yafp/updWallp">View On <strong>GitHub</strong></a></li>
+</ul>
+</header>
 
 
-        <ul>
-          <li><a href="https://github.com/yafp/updWallp/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/yafp/updWallp/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/yafp/updWallp">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
-<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h3>
+<!-- MainSectionm -->
+<section>
+  
+  
+<!-- About -->
+<h3><a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h3>
 
 <p><b>updWallp</b> is a small bash based project which creates nondistracting (blured/dimmed and some other stuff) wallpapers for your linux computer out of your images/photos.
 The basic idea is inspired by <a href="https://github.com/romannurik/muzei/">Muzei</a> and <a href="https://github.com/aepirli/linmuzei">Muzei to Bash</a>.</p>
 
-<h3>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>How it works</h3>
+
+
+
+
+<!-- How it works -->
+<h3><a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>How it works</h3>
 
 <p>updWallp offers 2 main operation modes.</p>
 <p>In <b>local-mode</b> updWallp.sh is using a random image from a user-supplied local folder to generate a blured & dimmed copy of it and sets the new created image as wallpaper.</p>
@@ -51,22 +62,22 @@ If you feel comfortable hacking the script you can go crazy and add tons of othe
 <!-- Example Output-->
 <h3>
 <a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Outputs</h3>
-<p>The following source image</p>
+<p>The following source image result in...</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleBase.png">
 
-<p>Using **local mode** (operationMode=1) and **normal** (imageModificationMode=0)</p>
+<p>Using <b>local mode</b> (operationMode=1) and <b>normal</b> (imageModificationMode=0)</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode0.png">
 
-<p>Using **local mode** (operationMode=1) and **grayscale** (imageModificationMode=1)</p>
+<p>Using <b>local mode** (operationMode=1) and <b>grayscale</b> (imageModificationMode=1)</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode1.png">
 
-<p>Using **local mode** (operationMode=1) and **sepia** (imageModificationMode=2)</p>
+<p>Using <b>local mode</b> (operationMode=1) and <b>sepia</b> (imageModificationMode=2)</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode2.png">
 
-<p>Using in **local mode** (operationMode=1) and **colorize** (imageModificationMode=3)</p>
+<p>Using in <b>local mode</b> (operationMode=1) and <b>colorize</b> (imageModificationMode=3)</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode3.png">
 
-<p>Using **local mode** (operationMode=1) and **level-colors (here: black and lightgreen)** with (imageModificationMode=4)</p>
+<p>Using <b>local mode</b> (operationMode=1) and <b>level-colors (here: black and lightgreen)</b> with (imageModificationMode=4)</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode4.png">
 <p>Keep in mind that all parameters are changeable.</p>
 
@@ -76,7 +87,6 @@ If you feel comfortable hacking the script you can go crazy and add tons of othe
 <!-- Requirements -->
 <h3>
 <a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h3>
-
 <ul>
 <li>ImageMagick (needed in general)</li>
 <li>cURL (needed in remote-mode to download images)</li>
@@ -94,7 +104,7 @@ If you feel comfortable hacking the script you can go crazy and add tons of othe
 
 <h4><a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h4>
 <p>You need to set the operation mode to either local (1) or remote (2)<(p>
-Change
+<p>Change</p>
 
 <code>operationMode=""</code>
 
@@ -104,7 +114,7 @@ Change
 
 <p>and in case of local mode you have to define the local image source folder as well</p>
 
-Change
+<p>Change</p>
 
 <code>localImageFolder=""</code>
 
@@ -137,23 +147,29 @@ Change
       
       
       
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/yafp">yafp</a></p>
-        <p><small>Hosted on GitHub Pages</small></p>
-      </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-71157358-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
+</section>
 
-  </body>
+
+<!-- Footer -->
+<footer>
+<p>This project is maintained by <a href="https://github.com/yafp">yafp</a></p>
+<p><small>Hosted on GitHub Pages</small></p>
+</footer>
+</div>
+
+
+<!-- Google analytics -->
+<script src="javascripts/scale.fix.js"></script>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-71157358-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+
+</body>
 </html>
