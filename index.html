@@ -54,8 +54,8 @@
 <p><b>updWallp</b> offers 2 main operation modes.</p>
 <p>In <b>local-mode</b> updWallp.sh is using a random image from a user-supplied local folder to generate a blured & dimmed copy of it and sets the new created image as wallpaper.</p>
 <p>In <b>remote-mode</b> (aka Muzei mode) it picks the muzei-picture-of-the-day from the internet, generates a blured & dimmed version of it and sets the new created image as wallpaper.</p>
-<p>The image-modification relies on ImageMagick and is user-adjustable. Out of the box all output images of updWallp are blured and dimmed, in addition they might be grayscaled or sepia or colorized differently. They might be scaled to a user-defined width as well.
-If you feel comfortable hacking the script you can go crazy and add tons of other parameters ImageMagick offers.</p>
+<p>The image-modification relies on ImageMagick and is user-adjustable. Out of the box all output images of updWallp are blured and dimmed, in addition they might be grayscaled or sepia or colorized differently. They might be scaled to a user-defined width as well.</p>
+<p>If you feel comfortable hacking the script you can go crazy and add tons of other parameters ImageMagick offers.</p>
 <p>A second bash script (updWallpShowOrg.sh) offers the option to temporary toggle the wallpaper back to the original (non-blured & dimmed) version of the current wallpaper for x seconds.</p>
 
 
@@ -63,23 +63,27 @@ If you feel comfortable hacking the script you can go crazy and add tons of othe
 <!-- Example Output-->
 <h3>
 <a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Outputs</h3>
-<p>The following source image result in...</p>
+<p>The following source image</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleBase.png">
 
-<p>Using <b>local mode</b> (operationMode=1) and <b>normal</b> (imageModificationMode=0)</p>
+<p>... results in the following output</p>
+
+<p><b>local mode</b> (operationMode=1) and <b>normal</b> (imageModificationMode=0)</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode0.png">
 
-<p>Using <b>local mode** (operationMode=1) and <b>grayscale</b> (imageModificationMode=1)</p>
+<p><b>local mode** (operationMode=1) and <b>grayscale</b> (imageModificationMode=1)</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode1.png">
 
-<p>Using <b>local mode</b> (operationMode=1) and <b>sepia</b> (imageModificationMode=2)</p>
+<p><b>local mode</b> (operationMode=1) and <b>sepia</b> (imageModificationMode=2)</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode2.png">
 
-<p>Using in <b>local mode</b> (operationMode=1) and <b>colorize</b> (imageModificationMode=3)</p>
+<p><b>local mode</b> (operationMode=1) and <b>colorize</b> (imageModificationMode=3)</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode3.png">
 
-<p>Using <b>local mode</b> (operationMode=1) and <b>level-colors (here: black and lightgreen)</b> with (imageModificationMode=4)</p>
+<p><b>local mode</b> (operationMode=1) and <b>level-colors (here: black and lightgreen)</b> with (imageModificationMode=4)</p>
 <img src="https://raw.githubusercontent.com/yafp/updWallp/master/doc/ss_exampleOutputMode4.png">
+
+
 <p>Keep in mind that all parameters are changeable.</p>
 
 
