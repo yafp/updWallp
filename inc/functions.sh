@@ -44,10 +44,9 @@ function checkOperatingSystem() {
         checkResolution     # Check which desktop environment is in use
         validateConfig # valide the mission critical config values
 
-
-    else # not linux -> not supported
-        printfWallp "3" "Unexpected operating system: $OSTYPE. Exiting (errno 99)."
-        exit 99
+    else # not linux -> untested -> not supported -> die
+        printf "$error04"
+        exit 4
     fi
 }
 
@@ -78,8 +77,8 @@ function validateConfig() {
 
     # check operation mode
     if [ -z "$operationMode" ]; then
-        printfWallp "3" "Undefined operation mode (operationMode) in config.sh. Exiting (errno 99)."
-        exit 99
+        printf "$error05" #  Undefined operation mode
+        exit 5
     else
         if [ "$operationMode" = "1" ] || [ "$operationMode" = "2" ] ; then
             printfWallp "1" "Operation mode: $operationMode"
@@ -243,7 +242,7 @@ function getNewRandomLocalFilePath() {
 # ---------------------------------------------------------------------
 function generateNewWallpaper() {
     convert "$newImage" $backupFilename                               # copy random base image to project folder (using convert to ensure its always a png)
-    printWallp "1" "Finished mirroring source image to $projectPath/$backupFilename"
+    printfWallp "1" "Working copy: $projectPath/$backupFilename"
 
 	case "$imageModificationMode" in
 
