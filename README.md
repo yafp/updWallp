@@ -1,4 +1,6 @@
-# updWallp
+updWallp
+=========
+[![License](https://img.shields.io/badge/license-GPL3-brightgreen.svg)](LICENSE)
 
 ![Logo](https://raw.githubusercontent.com/yafp/updWallp/master/img/appIcon_128px.png)
 
