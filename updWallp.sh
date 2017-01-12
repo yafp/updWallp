@@ -55,7 +55,11 @@ if [ -f $projectPath/config.sh ]; then # found config file
 				fi
 
 				generateNewWallpaper                         # generates a new wallpaper
-				setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
+				
+				if [ "$setWallpaperMode" = "1" ]; then
+				    setLinuxWallpaper  "$outputFilename"         # set the linux wallpaper
+				then
+				
 				cleanupUpdWallpDir                           # Cleaning up
 				exit 0 										# exit with success-message
 				;;

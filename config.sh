@@ -15,7 +15,7 @@
 
 
 # ---------------------------------------------------------------------
-# 1. OPERATION-MIDE
+# 1. OPERATION-MODE
 #       1 = local mode
 #       2 = remote mode (muzei)
 #
@@ -130,3 +130,14 @@ notifyPath="/usr/bin/notify-send"                    # defines the path to notif
 #       Example: loggingMode=1
 # ---------------------------------------------------------------------
 loggingMode=2
+
+
+
+
+
+# ---------------------------------------------------------------------
+# 9. SET WALLPAPER BY CODE (experimental)
+#       0 = updWallp just generates the wallpaper
+#       1 = updWallp tries to set the wallpaper. This might work or not - depending on your desktop environment.
+# ---------------------------------------------------------------------
+setWallpaper=0
