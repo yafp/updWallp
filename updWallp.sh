@@ -45,15 +45,27 @@ if [ -f $projectPath/config.sh ]; then # found config file
 				checkRequirements           # function to check for all required packages
 
 				# if configured to local mode
-				if [ "$operationMode" = "1" ]; then
-					getNewRandomLocalFilePath
-				fi
+				#if [ "$operationMode" = "1" ]; then
+				#	getNewRandomLocalFilePath
+				#fi
 
 				# if configured to remote mode
-				if [ "$operationMode" = "2" ]; then
-					getRemoteMuzeiImage
-				fi
-
+				#if [ "$operationMode" = "2" ]; then
+				#	getRemoteMuzeiImage
+				#fi
+				
+				case "$operationMode" in
+                    [1])
+                        getNewRandomLocalFilePath
+                        ;;
+                    [2])
+                        getRemoteMuzeiImage
+                        ;;
+                    *)
+                        printf "$error06"
+				        exit 6
+                esac
+				
 				generateNewWallpaper                         # generates a new wallpaper
 				
 				if [ "$setWallpaperMode" = "1" ]; then
